@@ -25,7 +25,7 @@ namespace News_App
             {
                 if (isNumber)
                 {
-                    if (choice < 1 && choice > articles.Count)
+                    if (choice >= 1 && choice <= articles.Count)
                     {
                         Console.WriteLine($"News {choice}\nTitle: {articles[choice - 1].Title}\nDescription: {articles[choice - 1].Description}\nURL: {articles[choice - 1].Url}");
                         break;
