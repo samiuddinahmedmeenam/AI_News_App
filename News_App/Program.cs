@@ -126,3 +126,8 @@ Console.WriteLine(Path.GetFullPath("articles.txt"));
 FileServices.SaveArticleToFile(article);
 FileServices.SaveMultipleArticlesToFile(articles);
 
+// display the articles using the DisplayServices.cs
+DisplayServices.DisplaySingleArticle(article);
+DisplayServices.DisplaySelectedArticles(articles);
+DisplayServices.DisplayMultipleArticles(articles);
+
