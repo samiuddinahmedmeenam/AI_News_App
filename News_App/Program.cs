@@ -29,9 +29,19 @@ articles.Add(new Article
     Description = "Economic indicators suggest that the global economy is showing signs of recovery after a challenging period.",
     Url = "https://www.example.com/news/global-economy-recovery"
 });
+// Print the articles
+foreach (var articleItem in articles)
+{
+    Console.WriteLine($"Title: {articleItem.Title}");
+    Console.WriteLine($"Description: {articleItem.Description}");
+    Console.WriteLine($"URL: {articleItem.Url}");
+}
+
+int i = 1;
 
 foreach (var articleItem in articles)
 {
+    Console.WriteLine($"News {i++}:");
     Console.WriteLine($"Title: {articleItem.Title}");
     Console.WriteLine($"Description: {articleItem.Description}");
     Console.WriteLine($"URL: {articleItem.Url}");
