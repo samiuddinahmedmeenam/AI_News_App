@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using News_App;
+using System.IO;
 
 // See https://aka.ms/new-console-template for more information
 Console.WriteLine("Fetching news...");
@@ -72,16 +73,20 @@ while (true)
         {
             Console.WriteLine($"You selected: {choice} which is '{articles[choice - 1].Title}'");
             Console.WriteLine($"Press 1 to display News description, Press 2 to select another one:");
-            int choice2 = int.Parse(Console.ReadLine());
-            if (choice2 == 1)
+            int choice2;
+            bool isNumber2 = int.TryParse(Console.ReadLine(), out choice2);
+            if (isNumber2)
             {
-                Console.WriteLine($"Description: {articles[choice - 1].Description}");
-                break;
-            }
-            else if (choice2 == 2)
-            {
-                Console.WriteLine($"Select the article number you are interested in:");
-                isNumber = int.TryParse(Console.ReadLine(), out choice);
+                if (choice2 == 1)
+                {
+                    Console.WriteLine($"Description: {articles[choice - 1].Description}");
+                    break;
+                }
+                else if (choice2 == 2)
+                {
+                    Console.WriteLine($"Select the article number you are interested in:");
+                    isNumber = int.TryParse(Console.ReadLine(), out choice);
+                }
             }
             else
             {
@@ -117,4 +122,7 @@ for (int j = 0; j<articles.Count; j++)
 
 Console.WriteLine(Path.GetFullPath("articles.txt"));
 
+// Save the article information to a text file using FileServices class
+FileServices.SaveArticleToFile(article);
+FileServices.SaveMultipleArticlesToFile(articles);
 
