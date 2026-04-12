@@ -24,4 +24,5 @@ DisplayServices.DisplaySelectedArticles(articles);
 DisplayServices.DisplayMultipleArticles(articles);
 
 
-
+string JSON = await NewsServices.CallAPI();
+Console.WriteLine($"JSON {JSON}");
