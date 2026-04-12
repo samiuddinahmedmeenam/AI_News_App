@@ -1,4 +1,6 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using System.IO;
+
+// See https://aka.ms/new-console-template for more information
 Console.WriteLine("Fetching news...");
 
 // Define the Article class
@@ -62,9 +64,11 @@ bool isNumber = int.TryParse(Console.ReadLine(), out choice);
 // validate user choice
 while (true)
 {
+    // check if user inputed a number to avoid strings
     if (isNumber)
     {
-        if(choice >= 1 && choice <= articles.Count)
+        // check if the number is within the range of available articles
+        if (choice >= 1 && choice <= articles.Count)
         {
             Console.WriteLine($"You selected: {choice} which is '{articles[choice - 1].Title}'");
             Console.WriteLine($"Press 1 to display News description, Press 2 to select another one:");
@@ -84,6 +88,7 @@ while (true)
                 Console.WriteLine("Invalid choice. Please enter 1 or 2.");
             }
         }
+        // if the number is out of range, prompt the user to enter a valid number
         else
         {
             Console.WriteLine("Invalid article number. Please try again.");
@@ -91,6 +96,7 @@ while (true)
             isNumber = int.TryParse(Console.ReadLine(), out choice);
         }
     }
+    // if the user input is not a number, prompt the user to enter a valid number
     else
     {
         Console.WriteLine("Invalid input. Please enter a number.");
@@ -98,5 +104,17 @@ while (true)
         isNumber = int.TryParse(Console.ReadLine(), out choice);
     }
 }
+// Save the article information to a text file
+File.WriteAllText("article.txt", $"Title: {article.Title}\nDescription: {article.Description}\nURL: {article.Url}");
+//File.WriteAllText("articles.txt", $"Title: {articles[0].Title}\nDescription: {articles[0].Description}\nURL: {articles[0].Url}");
+
+// Append the rest of the articles to the text file
+File.Delete("articles.txt");
+for (int j = 0; j<articles.Count; j++)
+{
+       File.AppendAllText("articles.txt", $"\n\nNews {j + 1}:\nTitle: {articles[j].Title}\nDescription: {articles[j].Description}\nURL: {articles[j].Url}");
+}
+
+Console.WriteLine(Path.GetFullPath("articles.txt"));
 
 
