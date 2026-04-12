@@ -36,9 +36,8 @@ foreach (var articleItem in articles)
     Console.WriteLine($"Description: {articleItem.Description}");
     Console.WriteLine($"URL: {articleItem.Url}");
 }
-
+// print the articles with numbers
 int i = 1;
-
 foreach (var articleItem in articles)
 {
     Console.WriteLine($"News {i++}:");
@@ -46,4 +45,58 @@ foreach (var articleItem in articles)
     Console.WriteLine($"Description: {articleItem.Description}");
     Console.WriteLine($"URL: {articleItem.Url}");
 }
+// ask for user choice
+// Console.WriteLine("Enter the Article number you are interested in:");
+//int choice = int.Parse(Console.ReadLine();
+// confirm user choice
+// Console.WriteLine($"You selected: {choice} which is '{articles[choice - 1].Title}'");
+// Console.WriteLine($"Press 1 do display News description, Press 2 to select another one:");
+// int choice2 = int.Parse(Console.ReadLine());
+
+// get user choice
+Console.WriteLine($"Select the article number you are interested in:");
+// int choice = int.Parse(Console.ReadLine());
+int choice;
+bool isNumber = int.TryParse(Console.ReadLine(), out choice);
+
+// validate user choice
+while (true)
+{
+    if (isNumber)
+    {
+        if(choice >= 1 && choice <= articles.Count)
+        {
+            Console.WriteLine($"You selected: {choice} which is '{articles[choice - 1].Title}'");
+            Console.WriteLine($"Press 1 to display News description, Press 2 to select another one:");
+            int choice2 = int.Parse(Console.ReadLine());
+            if (choice2 == 1)
+            {
+                Console.WriteLine($"Description: {articles[choice - 1].Description}");
+                break;
+            }
+            else if (choice2 == 2)
+            {
+                Console.WriteLine($"Select the article number you are interested in:");
+                isNumber = int.TryParse(Console.ReadLine(), out choice);
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice. Please enter 1 or 2.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid article number. Please try again.");
+            Console.WriteLine($"Select the article number you are interested in:");
+            isNumber = int.TryParse(Console.ReadLine(), out choice);
+        }
+    }
+    else
+    {
+        Console.WriteLine("Invalid input. Please enter a number.");
+        Console.WriteLine($"Select the article number you are interested in:");
+        isNumber = int.TryParse(Console.ReadLine(), out choice);
+    }
+}
+
 
