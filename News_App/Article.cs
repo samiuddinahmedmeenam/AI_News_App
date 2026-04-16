@@ -3,11 +3,12 @@ using System.Collections.Generic;
 
 public class Article
 {
-	public string Title { get; set; }
-	public string Description { get; set; }
-	public string Url { get; set; }
-
-   
+    public string Title { get; set; } = "";
+    public string Description { get; set; } = "";
+    public string Url { get; set; } = "";
+    public string SourceName { get; set; } = "";
+    public string PublishedAt { get; set; } = "";
+    public string ImageUrl { get; set; } = "";
 }
 
 

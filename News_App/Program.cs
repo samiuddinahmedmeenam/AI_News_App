@@ -4,7 +4,7 @@ using System.IO;
 // See https://aka.ms/new-console-template for more information
 Console.WriteLine("Fetching news...");
 
-List<Article> articles = NewsServices.GetTopNews();
+List<Article> articles = await NewsServices.GetTopNews();
 
 for(int i = 0; i<articles.Count; i++)
 {
