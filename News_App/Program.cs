@@ -16,7 +16,10 @@ for(int i = 0; i<articles.Count; i++)
 
 // Save the article information to a text file using FileServices class
 // FileServices.SaveArticleToFile(article);
-FileServices.SaveMultipleArticlesToFile(articles);
+File.Delete("articles.txt");
+File.Delete("article.txt");
+// FileServices.SaveMultipleArticlesToFile(articles);
+FileServices.SaveSelectedArticlesToFile(articles);
 Console.WriteLine(Path.GetFullPath("articles.txt"));
 
 // display the articles using the DisplayServices.cs

@@ -26,5 +26,24 @@ namespace News_App
                 File.AppendAllText(filepath, articleData);
             }
         }
+
+        public static void SaveSelectedArticlesToFile(List<Article> articles)
+        {
+            string filepath = "article.txt";
+            Console.WriteLine("Enter the article you are interested to save: ");
+            int choice;
+            bool isNumber = int.TryParse(Console.ReadLine(), out choice);
+            if (isNumber && choice > 0 && choice <= articles.Count)
+            {
+                Article selectedArticle = articles[choice - 1];
+                string articleData = $"News {choice}:\nTitle: {selectedArticle.Title}\nDescription: {selectedArticle.Description}\nURL: {selectedArticle.Url}\n\n";
+                File.AppendAllText(filepath, articleData);
+                Console.WriteLine("Selected article saved to file.");
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a valid article number.");
+            }
+        }
     }
 }
