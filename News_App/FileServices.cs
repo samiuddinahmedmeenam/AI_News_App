@@ -27,7 +27,7 @@ namespace News_App
             }
         }
 
-        public static void SaveSelectedArticlesToFile(List<Article> articles)
+        public static void SaveSelectedArticleToFile(List<Article> articles)
         {
             string filepath = "article.txt";
             Console.WriteLine("Enter the article you are interested to save: ");

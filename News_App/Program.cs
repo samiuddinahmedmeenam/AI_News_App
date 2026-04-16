@@ -19,14 +19,20 @@ for(int i = 0; i<articles.Count; i++)
 File.Delete("articles.txt");
 File.Delete("article.txt");
 // FileServices.SaveMultipleArticlesToFile(articles);
-FileServices.SaveSelectedArticlesToFile(articles);
+FileServices.SaveSelectedArticleToFile(articles);
 Console.WriteLine(Path.GetFullPath("articles.txt"));
 
 // display the articles using the DisplayServices.cs
 //DisplayServices.DisplaySingleArticle(article);
-DisplayServices.DisplaySelectedArticles(articles);
+DisplayServices.DisplaySelectedArticle(articles);
 // DisplayServices.DisplayMultipleArticles(articles);
 
 
 // string JSON = await NewsServices.CallAPI();
 // Console.WriteLine($"JSON {JSON}");
+
+// get the AI summary
+int choice = int.Parse(Console.ReadLine());
+Article selectedArticle = articles[choice - 1];
+string summary = await AiSummaryServices.GetSummary(selectedArticle);
+Console.WriteLine(summary);

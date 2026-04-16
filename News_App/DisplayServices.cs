@@ -15,7 +15,7 @@ namespace News_App
             Console.WriteLine(output);
         }
 
-        public static void DisplaySelectedArticles(List<Article> articles)
+        public static void DisplaySelectedArticle(List<Article> articles)
         {
             Console.WriteLine($"Select the new you are interested in: ");
             int choice;
