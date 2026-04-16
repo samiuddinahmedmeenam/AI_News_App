@@ -12,17 +12,18 @@ for(int i = 0; i<articles.Count; i++)
 }
 
 
-Console.WriteLine(Path.GetFullPath("articles.txt"));
+// Console.WriteLine(Path.GetFullPath("articles.txt"));
 
 // Save the article information to a text file using FileServices class
-//FileServices.SaveArticleToFile(article);
+// FileServices.SaveArticleToFile(article);
 FileServices.SaveMultipleArticlesToFile(articles);
+Console.WriteLine(Path.GetFullPath("articles.txt"));
 
 // display the articles using the DisplayServices.cs
 //DisplayServices.DisplaySingleArticle(article);
 DisplayServices.DisplaySelectedArticles(articles);
-DisplayServices.DisplayMultipleArticles(articles);
+// DisplayServices.DisplayMultipleArticles(articles);
 
 
-string JSON = await NewsServices.CallAPI();
-Console.WriteLine($"JSON {JSON}");
+// string JSON = await NewsServices.CallAPI();
+// Console.WriteLine($"JSON {JSON}");

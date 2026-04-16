@@ -19,7 +19,7 @@ namespace News_App
         public static void SaveMultipleArticlesToFile(List<Article> articles)
         {
             string filepath = "articles.txt";
-            File.Delete(filepath); // Clear the file before writing new data
+            // File.Delete(filepath); // Clear the file before writing new data
             for (int j = 0; j < articles.Count; j++)
             {
                 string articleData = $"News {j + 1}:\nTitle: {articles[j].Title}\nDescription: {articles[j].Description}\nURL: {articles[j].Url}\n\n";

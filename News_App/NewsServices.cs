@@ -32,7 +32,7 @@ namespace News_App
             // Check if the API response is not null and contains results before processing
             if (apiResponse?.results != null)
             {
-                for(int i = 0; i<apiResponse.results.Count; i++)
+                for(int i = 0; i<5; i++)
                 {
                     NewsDataArticle item = apiResponse.results[i];
                     articles.Add(new Article
@@ -52,7 +52,7 @@ namespace News_App
         public static async Task<string> CallAPI()
         {
             using HttpClient Client = new HttpClient();
-            string url = "https://newsdata.io/api/1/latest?apikey=pub_cbfa2a0ee9a44571a357aad0783424ad";
+            string url = "https://newsdata.io/api/1/latest?apikey=pub_cbfa2a0ee9a44571a357aad0783424ad&language=en";
             string response = await Client.GetStringAsync(url);
             return response;
         }
