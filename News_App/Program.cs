@@ -2,28 +2,19 @@
 
 Console.WriteLine("Fetching news...");
 
+DatabaseService.InitializeDatabase();
+
 List<Article> articles = await NewsServices.GetTopNews();
 
-for (int i = 0; i < articles.Count; i++)
-{
-    Console.WriteLine($"Top news {i + 1}");
-    Console.WriteLine($"Title: {articles[i].Title}");
-    Console.WriteLine($"Description: {articles[i].Description}");
-    Console.WriteLine($"URL: {articles[i].Url}");
-    Console.WriteLine();
-}
+DatabaseService.SaveArticles(articles);
+Console.WriteLine("Articles saved to database.");
 
-Console.WriteLine("Enter the article you're interested in:");
+List<Article> articles1 = await NewsServices.GetTopNews();
 
-int choice;
-while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > articles.Count)
-{
-    Console.WriteLine($"Invalid input. Enter a number between 1 and {articles.Count}:");
-}
+Console.WriteLine("Select the news to be saved int the database: ");
 
-Article selectedArticle = articles[choice - 1];
+DisplayServices.DisplayMultipleArticles(articles1);
 
-string summary = await AiSummaryServices.GetSummary(selectedArticle);
+DisplayServices.DisplaySelectedArticle(articles1);
 
-Console.WriteLine("\nAI Summary:");
-Console.WriteLine(summary);
+DatabaseService.SaveSelectedArticle(articles1);
