@@ -4,12 +4,21 @@ Console.WriteLine("Fetching news...");
 
 DatabaseService.InitializeDatabase();
 
-List<Article> articles = await NewsServices.GetTopNews();
+List<Article> articles;
 
-DatabaseService.SaveArticles(articles);
-Console.WriteLine("Articles saved to database.");
+if (DatabaseService.ArticleExists())
+{
+    Console.WriteLine("Articles found in the database. Loading from database...");
+    articles = DatabaseService.GetAllArticles();
+}
+else
+{
+    Console.WriteLine("No articles in the database. Fetching from API...");
+    articles = await NewsServices.GetTopNews();
+    DatabaseService.SaveArticles(articles);
+    Console.WriteLine("Articles saved to the database.");
+}
 
-List<Article> savedArticles = DatabaseService.GetAllArticles();
-
-Console.WriteLine("\nArticles read from database:");
-DisplayServices.DisplayMultipleArticles(savedArticles);
+Console.WriteLine("\nArticles:");
+DisplayServices.DisplayMultipleArticles(articles);
+Console.WriteLine(Path.GetFullPath("news.db"));

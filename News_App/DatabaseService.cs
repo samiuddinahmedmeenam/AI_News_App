@@ -115,5 +115,19 @@ namespace News_App
 
             return articles;
         }
+
+        public static bool ArticleExists()
+        {
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT COUNT(*) FROM NewsArticles;";
+
+            long count = (long)command.ExecuteScalar();
+
+            Console.WriteLine($"Total articles in database: {count}");
+            return count > 0;
+        }
     }
 }
