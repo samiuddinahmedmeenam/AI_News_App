@@ -9,12 +9,7 @@ List<Article> articles = await NewsServices.GetTopNews();
 DatabaseService.SaveArticles(articles);
 Console.WriteLine("Articles saved to database.");
 
-List<Article> articles1 = await NewsServices.GetTopNews();
+List<Article> savedArticles = DatabaseService.GetAllArticles();
 
-Console.WriteLine("Select the news to be saved int the database: ");
-
-DisplayServices.DisplayMultipleArticles(articles1);
-
-DisplayServices.DisplaySelectedArticle(articles1);
-
-DatabaseService.SaveSelectedArticle(articles1);
+Console.WriteLine("\nArticles read from database:");
+DisplayServices.DisplayMultipleArticles(savedArticles);

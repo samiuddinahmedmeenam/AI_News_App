@@ -82,5 +82,38 @@ namespace News_App
                 Console.WriteLine("Invalid input. Please enter a valid article number.");
             }
         }
+
+        public static List<Article> GetAllArticles()
+        {
+            List<Article> articles = new List<Article>();
+
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText= @"
+            SELECT Title, Description, Url, SourceName, PublishedAt, ImageUrl
+            FROM NewsArticles;
+            ";
+
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Article article = new Article
+                {
+                    Title = reader.GetString(0),
+                    Description = reader.IsDBNull(1) ? null : reader.GetString(1),
+                    Url = reader.GetString(2),
+                    SourceName = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                    PublishedAt = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                    ImageUrl = reader.IsDBNull(5) ? "" : reader.GetString(5)
+                };
+
+                articles.Add(article);
+            }
+
+            return articles;
+        }
     }
 }
