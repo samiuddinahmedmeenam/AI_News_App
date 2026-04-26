@@ -28,6 +28,8 @@ namespace News_App
                     SourceName TEXT,
                     PublishedAt TEXT,
                     ImageUrl TEXT,
+                    Language TEXT,
+                    Category TEXT,  
                     FetchedAt TEXT NOT NULL
                 );
             ";
@@ -42,17 +44,19 @@ namespace News_App
             var command = connection.CreateCommand();
             command.CommandText = @"
                 INSERT OR IGNORE INTO NewsArticles 
-                (ProviderArticleId, Title, Description, Url, SourceName, PublishedAt, ImageUrl, FetchedAt)
-                VALUES ($ProviderArticleId, $Title, $Description, $Url, $SourceName, $PublishedAt, $ImageUrl, $FetchedAt);
+                (ProviderArticleId, Title, Description, Url, SourceName, PublishedAt, ImageUrl, Language, Category, FetchedAt)
+                VALUES ($ProviderArticleId, $Title, $Description, $Url, $SourceName, $PublishedAt, $ImageUrl, $Language, $Category, $FetchedAt);
             ";
 
-            command.Parameters.AddWithValue("$ProviderArticleId", "");
+            command.Parameters.AddWithValue("$ProviderArticleId", article.ProviderArticleId);
             command.Parameters.AddWithValue("$Title", article.Title);
             command.Parameters.AddWithValue("$Description", article.Description);
             command.Parameters.AddWithValue("$Url", article.Url);
             command.Parameters.AddWithValue("$SourceName", article.SourceName);
             command.Parameters.AddWithValue("$PublishedAt", article.PublishedAt);
             command.Parameters.AddWithValue("$ImageUrl", article.ImageUrl);
+            command.Parameters.AddWithValue("$Language", article.Language);
+            command.Parameters.AddWithValue("$Category", article.Category);
             command.Parameters.AddWithValue("$FetchedAt", DateTime.UtcNow.ToString("O"));
 
             command.ExecuteNonQuery();
@@ -92,7 +96,7 @@ namespace News_App
 
             var command = connection.CreateCommand();
             command.CommandText= @"
-            SELECT Title, Description, Url, SourceName, PublishedAt, ImageUrl
+            SELECT Title, Description, Url, SourceName, PublishedAt, ImageUrl, Language, Category
             FROM NewsArticles;
             ";
 
@@ -102,12 +106,15 @@ namespace News_App
             {
                 Article article = new Article
                 {
-                    Title = reader.GetString(0),
-                    Description = reader.IsDBNull(1) ? null : reader.GetString(1),
-                    Url = reader.GetString(2),
-                    SourceName = reader.IsDBNull(3) ? "" : reader.GetString(3),
-                    PublishedAt = reader.IsDBNull(4) ? "" : reader.GetString(4),
-                    ImageUrl = reader.IsDBNull(5) ? "" : reader.GetString(5)
+                    ProviderArticleId = reader.IsDBNull(0) ? "" : reader.GetString(0),
+                    Title = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                    Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    Url = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                    SourceName = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                    PublishedAt = reader.IsDBNull(5) ? "" : reader.GetString(5),
+                    ImageUrl = reader.IsDBNull(6) ? "" : reader.GetString(6),
+                    Language = reader.IsDBNull(7) ? "" : reader.GetString(7),
+                    Category = reader.IsDBNull(8) ? "" : reader.GetString(8)
                 };
 
                 articles.Add(article);

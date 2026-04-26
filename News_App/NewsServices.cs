@@ -27,7 +27,10 @@ namespace News_App
                         Url = item.link ?? "No URL.",
                         SourceName = item.source_name ?? "No source name.",
                         PublishedAt = item.pubDate ?? "No publication date.",
-                        ImageUrl = item.image_url ?? "No image URL."
+                        ImageUrl = item.image_url ?? "No image URL.",
+                        ProviderArticleId = item.article_id ?? "",
+                        Language = item.language ?? "",
+                        Category = item.category != null ? string.Join(",", item.category) : ""
                     });
                 }
             }
@@ -61,5 +64,7 @@ namespace News_App
         public string? image_url { get; set; }
         public string? source_name { get; set; }
         public string? source_url { get; set; }
+        public string? language { get; set; }
+        public List<string>? category { get; set; }
     }
 }

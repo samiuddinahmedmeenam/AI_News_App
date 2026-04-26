@@ -10,6 +10,9 @@ public class Article
     public string SourceName { get; set; } = "";
     public string PublishedAt { get; set; } = "";
     public string ImageUrl { get; set; } = "";
+    public string ProviderArticleId { get; set; } = "";
+    public string Language { get; set; } = ""; 
+    public string Category { get; set; } = "";
 }
 
 
