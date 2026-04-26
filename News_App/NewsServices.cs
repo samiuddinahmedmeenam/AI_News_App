@@ -30,7 +30,8 @@ namespace News_App
                         ImageUrl = item.image_url ?? "No image URL.",
                         ProviderArticleId = item.article_id ?? "",
                         Language = item.language ?? "",
-                        Category = item.category != null ? string.Join(",", item.category) : ""
+                        Category = item.category != null ? string.Join(",", item.category) : "",
+                        Content = item.content ?? ""
                     });
                 }
             }
@@ -66,5 +67,6 @@ namespace News_App
         public string? source_url { get; set; }
         public string? language { get; set; }
         public List<string>? category { get; set; }
+        public string? content { get; set; }
     }
 }

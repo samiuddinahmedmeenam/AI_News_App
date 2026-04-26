@@ -4,21 +4,25 @@ Console.WriteLine("Fetching news...");
 
 DatabaseService.InitializeDatabase();
 
-List<Article> articles;
+List<Article> articles = await NewsServices.GetTopNews();
 
-if (DatabaseService.ArticleExists())
+
+DatabaseService.SaveArticles(articles);
+Console.WriteLine(articles.Count + " articles saved to the database.");
+
+
+DatabaseService.SaveArticleChunks(articles);
+Console.WriteLine("\nArticle chunks saved to the database.");
+
+Console.WriteLine("\n Enter your Question: ");
+string question = Console.ReadLine();
+
+List<ArticleChunk> allChunks = DatabaseService.GetAllChunks();
+List<ArticleChunk> relevantChunks = RetrievalService.RetrieveRelevantChunks(question, allChunks);
+
+Console.WriteLine("\n Top Relevant Article Chunks: ");
+for (int i = 0; i<relevantChunks.Count; i++)
 {
-    Console.WriteLine("Articles found in the database. Loading from database...");
-    articles = DatabaseService.GetAllArticles();
+    Console.WriteLine($"\nChunk {i + 1}:");
+    Console.WriteLine(relevantChunks[i].ChunkText);
 }
-else
-{
-    Console.WriteLine("No articles in the database. Fetching from API...");
-    articles = await NewsServices.GetTopNews();
-    DatabaseService.SaveArticles(articles);
-    Console.WriteLine("Articles saved to the database.");
-}
-
-Console.WriteLine("\nArticles:");
-DisplayServices.DisplaySingleArticleMetadata(articles);
-

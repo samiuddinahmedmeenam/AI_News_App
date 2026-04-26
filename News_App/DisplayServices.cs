@@ -92,7 +92,8 @@ namespace News_App
                             $"ImageUrl: {articles[choice-1].ImageUrl}\n" +
                             $"ProviderArticleId: {articles[choice-1].ProviderArticleId}\n" +
                             $"Language: {articles[choice-1].Language}\n" +
-                            $"Category: {articles[choice-1].Category}");
+                            $"Category: {articles[choice-1].Category}\n" +
+                            $"Content: {articles[choice-1].Content}");
                         break;
                     }
                     else
