@@ -51,5 +51,62 @@ namespace News_App
                 Console.WriteLine($"news {i + 1}\nTitle: {articles[i].Title}\nDescription: {articles[i].Description}\nURL: {articles[i].Url}");
             }
         }
+
+        public static void DisplayArticleMetadata(List<Article> articles)
+        {
+            for(int i = 0; i<articles.Count; i++)
+            {
+                Console.WriteLine(
+                    $"News {i + 1}:\n" +
+                    $"Title: {articles[i].Title}\n" +
+                    $"Description\n" +
+                    $"Url: {articles[i].Url}\n" +
+                    $"SourceName: {articles[i].SourceName}\n" +
+                    $"PublishedAt: {articles[i].PublishedAt}\n" +
+                    $"ImageUrl: {articles[i].ImageUrl}\n" +
+                    $"ProviderArticleId: {articles[i].ProviderArticleId}\n" +
+                    $"Language: {articles[i].Language}\n" +
+                    $"Category: {articles[i].Category}");
+            }
+        }
+
+        public static void DisplaySingleArticleMetadata(List<Article> articles)
+        {
+            Console.WriteLine($"Enter which news you want to see the metadata of: ");
+            int choice;
+            bool isNumber = int.TryParse(Console.ReadLine(), out choice);
+
+            while (true)
+            {
+                if(isNumber)
+                {
+                    if (choice >0 && choice <= articles.Count)
+                    {
+                        Console.WriteLine(
+                            $"News {choice}\n" +
+                            $"Title: {articles[choice-1].Title}\n" +
+                            $"Description: {articles[choice-1].Description}\n" +
+                            $"Url: {articles[choice-1].Url}\n" +
+                            $"SourceName: {articles[choice-1].SourceName}\n" +
+                            $"PublishedAt: {articles[choice-1].PublishedAt}\n" +
+                            $"ImageUrl: {articles[choice-1].ImageUrl}\n" +
+                            $"ProviderArticleId: {articles[choice-1].ProviderArticleId}\n" +
+                            $"Language: {articles[choice-1].Language}\n" +
+                            $"Category: {articles[choice-1].Category}");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Invalid number, choose 1");
+                        isNumber = int.TryParse(Console.ReadLine(), out choice);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid number, choose 1");
+                    isNumber = int.TryParse(Console.ReadLine(), out choice);
+                }
+            }
+        }
     }
 }

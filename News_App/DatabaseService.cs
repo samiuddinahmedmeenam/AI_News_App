@@ -136,5 +136,7 @@ namespace News_App
             Console.WriteLine($"Total articles in database: {count}");
             return count > 0;
         }
+
+
     }
 }

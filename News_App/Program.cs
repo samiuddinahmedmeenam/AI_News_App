@@ -20,5 +20,5 @@ else
 }
 
 Console.WriteLine("\nArticles:");
-DisplayServices.DisplayMultipleArticles(articles);
-Console.WriteLine(Path.GetFullPath("news.db"));
+DisplayServices.DisplaySingleArticleMetadata(articles);
+
