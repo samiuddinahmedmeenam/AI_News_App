@@ -46,5 +46,15 @@ namespace News_App
                         .Distinct()
                         .ToList();
         }
+
+        public static string BuildContextFromChunks(List<ArticleChunk> chunks)
+        {
+            if (chunks == null || chunks.Count == 0)
+            {
+                return "";
+            }
+
+            return string.Join("\n\n---\n\n", chunks.Select(c => c.ChunkText));
+        }
     }
 }

@@ -72,5 +72,70 @@ namespace News_App
 
             return "No summary text found in response.";
         }
+
+        public static async Task<string> AnswerWithContext(string question, string context)
+        {
+            string? apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                return "OpenAI API key not found. Set OPENAI_API_KEY first.";
+            }
+
+            using HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+
+            string prompt =
+                "Answer the user's question using only the provided context. " +
+                "If the answer is not in the context, say you could not find it in the retrieved news.\n\n" +
+                $"Question: {question}\n\n" +
+                $"Context:\n{context}";
+
+            var bodyObject = new
+            {
+                model = "gpt-4o",
+                input = prompt,
+                max_output_tokens = 200
+            };
+
+            string jsonBody = JsonSerializer.Serialize(bodyObject);
+
+            using StringContent content = new StringContent(
+                jsonBody,
+                Encoding.UTF8,
+                "application/json"
+            );
+
+            HttpResponseMessage response =
+                await client.PostAsync("https://api.openai.com/v1/responses", content);
+
+            string responseJson = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return $"OpenAI API error: {response.StatusCode}\n{responseJson}";
+            }
+
+            using JsonDocument doc = JsonDocument.Parse(responseJson);
+
+            if (doc.RootElement.TryGetProperty("output", out JsonElement outputArray))
+            {
+                foreach (JsonElement item in outputArray.EnumerateArray())
+                {
+                    if (item.TryGetProperty("content", out JsonElement contentArray))
+                    {
+                        foreach (JsonElement contentItem in contentArray.EnumerateArray())
+                        {
+                            if (contentItem.TryGetProperty("text", out JsonElement textElement))
+                            {
+                                return textElement.GetString() ?? "No answer returned.";
+                            }
+                        }
+                    }
+                }
+            }
+
+            return "No answer text found in response.";
+        }
     }
 }
