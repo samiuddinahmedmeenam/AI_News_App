@@ -39,6 +39,41 @@ namespace News_App
                                .ToList();
         }
 
+        public static List<(ArticleChunk chunk, int score)> RetrieveRelevantChunksWithScores(string question, List<ArticleChunk> chunks, int topK = 3)
+        {
+            List<string> keywords = ExtractKeywords(question);
+
+            var scoredChunks = new List<(ArticleChunk chunk, int score)>();
+
+            foreach (var chunk in chunks)
+            {
+                int score = 0;
+
+                HashSet<string> chunkWords = Regex.Split(chunk.ChunkText.ToLower(), @"\W+")
+                    .Where(word => !string.IsNullOrWhiteSpace(word))
+                    .ToHashSet();
+
+                foreach (var keyword in keywords)
+                {
+                    if (chunkWords.Contains(keyword))
+                    {
+                        score++;
+                    }
+                }
+
+                if (score > 0)
+                {
+                    scoredChunks.Add((chunk, score));
+                }
+            }
+
+            return scoredChunks
+                .OrderByDescending(x => x.score)
+                .ThenBy(x => x.chunk.ChunkIndex)
+                .Take(topK)
+                .ToList();
+        }
+
         private static List<string> ExtractKeywords(string question)
         {
             return Regex.Split(question.ToLower(), @"\W+")

@@ -33,3 +33,14 @@ string ragAnswer = await AiSummaryServices.AnswerWithContext(question, context);
 
 Console.WriteLine("\nRAG Answer:");
 Console.WriteLine(ragAnswer);
+
+
+var results = RetrievalService.RetrieveRelevantChunksWithScores(question, allChunks);
+
+Console.WriteLine("\nTop Relevant Article Chunks:");
+for (int i = 0; i < results.Count; i++)
+{
+    Console.WriteLine($"\nChunk {i + 1} | Score: {results[i].score}");
+    Console.WriteLine($"Article URL: {results[i].chunk.ArticleUrl}");
+    Console.WriteLine(results[i].chunk.ChunkText);
+}

@@ -44,7 +44,8 @@ namespace News_App
                     ProviderArticleId TEXT,
                     ChunkIndex INTEGER NOT NULL,
                     ChunkText TEXT NOT NULL,
-                    CreatedAt TEXT NOT NULL
+                    CreatedAt TEXT NOT NULL,
+                    UNIQUE (ArticleUrl, ChunkIndex)
                 );
             ";
             chunkCommand.ExecuteNonQuery();
@@ -141,7 +142,7 @@ namespace News_App
             return articles;
         }
 
-        public static bool ArticleExists()
+        public static bool HasArticles()
         {
             using var connection = new SqliteConnection(connectionString);
             connection.Open();
@@ -195,7 +196,7 @@ namespace News_App
             {
                 var command = connection.CreateCommand();
                 command.CommandText = @"
-                    INSERT INTO ArticleChunks
+                    INSERT OR IGNORE INTO ArticleChunks
                     (ArticleUrl, ProviderArticleId, ChunkIndex, ChunkText, CreatedAt)
                     VALUES
                     ($ArticleUrl, $ProviderArticleId, $ChunkIndex, $ChunkText, $CreatedAt);
@@ -229,9 +230,10 @@ namespace News_App
 
             var command = connection.CreateCommand();
             command.CommandText = @"
-            SELECT Id, ArticleUrl, ProviderArticleId, ChunkIndex, ChunkText, CreatedAt
-            FROM ArticleChunks;
-        ";
+        SELECT Id, ArticleUrl, ProviderArticleId, ChunkIndex, ChunkText, CreatedAt
+        FROM ArticleChunks;
+    ";
+
             using var reader = command.ExecuteReader();
 
             while (reader.Read())
