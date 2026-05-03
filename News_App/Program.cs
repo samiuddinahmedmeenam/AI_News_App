@@ -31,13 +31,24 @@ else
     // Generate embeddings for all chunks and save them
     List<ArticleChunk> chunksToEmbed = DatabaseService.GetAllChunks();
 
+    int newEmbeddingCount = 0;
+    int skippedEmbeddingCount = 0;
+
     foreach (var chunk in chunksToEmbed)
     {
+        if (DatabaseService.ChunkEmbeddingExists(chunk.Id))
+        {
+            skippedEmbeddingCount++;
+            continue;
+        }
+
         List<float> embedding = await EmbeddingService.GetEmbedding(chunk.ChunkText);
         DatabaseService.SaveChunkEmbedding(chunk.Id, embedding);
+        newEmbeddingCount++;
     }
 
-    Console.WriteLine("Chunk embeddings saved to the database.");
+    Console.WriteLine($"New embeddings saved: {newEmbeddingCount}");
+    Console.WriteLine($"Embeddings skipped (already existed): {skippedEmbeddingCount}");
 }
 
 // 3. Display loaded articles
