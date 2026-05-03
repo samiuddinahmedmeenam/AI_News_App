@@ -86,8 +86,10 @@ namespace News_App
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
 
             string prompt =
-                "Answer the user's question using only the provided context. " +
-                "If the answer is not in the context, say you could not find it in the retrieved news.\n\n" +
+                "You are answering questions about retrieved news articles. " +
+                "Use only the provided context. " +
+                "If the context contains partial relevant information, summarize that information clearly. " +
+                "Only say you could not find it if the context is completely unrelated.\n\n" +
                 $"Question: {question}\n\n" +
                 $"Context:\n{context}";
 

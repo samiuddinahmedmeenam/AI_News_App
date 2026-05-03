@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.Data.Sqlite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Data.Sqlite;
 
 namespace News_App
 {
@@ -35,6 +36,20 @@ namespace News_App
                 );
             ";
             command.ExecuteNonQuery();
+
+
+            var embeddingCommand = connection.CreateCommand();
+            embeddingCommand.CommandText = @"
+                CREATE TABLE IF NOT EXISTS ChunkEmbeddings (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    ChunkId INTEGER NOT NULL UNIQUE,
+                    EmbeddingModel TEXT NOT NULL,
+                    EmbeddingJson TEXT NOT NULL,
+                    CreatedAt TEXT NOT NULL
+                );
+            ";
+            embeddingCommand.ExecuteNonQuery();
+
 
             var chunkCommand = connection.CreateCommand();
             chunkCommand.CommandText = @"
@@ -252,6 +267,59 @@ namespace News_App
             }
 
             return chunks;
+        }
+
+        public static void SaveChunkEmbedding(int chunkId, List<float> embedding, string model = "text-embedding-3-small")
+        {
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+        INSERT OR REPLACE INTO ChunkEmbeddings
+        (ChunkId, EmbeddingModel, EmbeddingJson, CreatedAt)
+        VALUES
+        ($ChunkId, $EmbeddingModel, $EmbeddingJson, $CreatedAt);
+    ";
+
+            command.Parameters.AddWithValue("$ChunkId", chunkId);
+            command.Parameters.AddWithValue("$EmbeddingModel", model);
+            command.Parameters.AddWithValue("$EmbeddingJson", JsonSerializer.Serialize(embedding));
+            command.Parameters.AddWithValue("$CreatedAt", DateTime.UtcNow.ToString("O"));
+
+            command.ExecuteNonQuery();
+        }
+
+
+        public static Dictionary<int, List<float>> GetAllChunkEmbeddings()
+        {
+            Dictionary<int, List<float>> embeddings = new Dictionary<int, List<float>>();
+
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+        SELECT ChunkId, EmbeddingJson
+        FROM ChunkEmbeddings;
+    ";
+
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                int chunkId = reader.GetInt32(0);
+                string embeddingJson = reader.GetString(1);
+
+                List<float>? embedding = JsonSerializer.Deserialize<List<float>>(embeddingJson);
+
+                if (embedding != null)
+                {
+                    embeddings[chunkId] = embedding;
+                }
+            }
+
+            return embeddings;
         }
 
     }

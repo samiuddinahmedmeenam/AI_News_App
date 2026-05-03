@@ -74,6 +74,8 @@ namespace News_App
                 .ToList();
         }
 
+
+
         private static List<string> ExtractKeywords(string question)
         {
             return Regex.Split(question.ToLower(), @"\W+")
@@ -90,6 +92,46 @@ namespace News_App
             }
 
             return string.Join("\n\n---\n\n", chunks.Select(c => c.ChunkText));
+        }
+
+        public static double CosineSimilarity(List<float> a, List<float> b)
+        {
+            double dot = 0;
+            double normA = 0;
+            double normB = 0;
+
+            for (int i = 0; i < a.Count; i++)
+            {
+                dot += a[i] * b[i];
+                normA += a[i] * a[i];
+                normB += b[i] * b[i];
+            }
+
+            return dot / (Math.Sqrt(normA) * Math.Sqrt(normB));
+        }
+
+        public static List<ArticleChunk> RetrieveRelevantChunksSemantic(
+                                                                        List<float> questionEmbedding,
+                                                                        List<ArticleChunk> chunks,
+                                                                        Dictionary<int, List<float>> chunkEmbeddings,
+                                                                        int topK = 5)
+        {
+            var scored = new List<(ArticleChunk chunk, double score)>();
+
+            foreach (var chunk in chunks)
+            {
+                if (chunkEmbeddings.TryGetValue(chunk.Id, out var embedding))
+                {
+                    double score = CosineSimilarity(questionEmbedding, embedding);
+                    scored.Add((chunk, score));
+                }
+            }
+
+            return scored
+                .OrderByDescending(x => x.score)
+                .Take(topK)
+                .Select(x => x.chunk)
+                .ToList();
         }
     }
 }
