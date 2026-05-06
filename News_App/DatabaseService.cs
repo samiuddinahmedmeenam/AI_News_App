@@ -171,6 +171,25 @@ namespace News_App
             return count > 0;
         }
 
+        public static bool ChunkEmbeddingExists(int chunkId)
+        {
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+                SELECT COUNT(*)
+                FROM ChunkEmbeddings
+                WHERE ChunkId = $ChunkId;
+            ";
+
+            command.Parameters.AddWithValue("$ChunkId", chunkId);
+
+            long count = (long)command.ExecuteScalar();
+
+            return count > 0;
+        }
+
 
         public static List<string> ChunkText(string text, int chunkSize = 300)
         {
@@ -322,24 +341,7 @@ namespace News_App
             return embeddings;
         }
 
-        public static bool ChunkEmbeddingExists(int chunkId)
-        {
-            using var connection = new SqliteConnection(connectionString);
-            connection.Open();
-
-            var command = connection.CreateCommand();
-            command.CommandText = @"
-                SELECT COUNT(*)
-                FROM ChunkEmbeddings
-                WHERE ChunkId = $ChunkId;
-            ";
-
-            command.Parameters.AddWithValue("$ChunkId", chunkId);
-
-            long count = (long)command.ExecuteScalar();
-
-            return count > 0;
-        }
+        
 
     }
 }

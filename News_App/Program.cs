@@ -28,7 +28,7 @@ else
     DatabaseService.SaveArticleChunks(articles);
     Console.WriteLine("Article chunks saved to the database.");
 
-    // Generate embeddings for all chunks and save them
+    // Generate embeddings only for chunks that do not already have embeddings
     List<ArticleChunk> chunksToEmbed = DatabaseService.GetAllChunks();
 
     int newEmbeddingCount = 0;
@@ -48,7 +48,7 @@ else
     }
 
     Console.WriteLine($"New embeddings saved: {newEmbeddingCount}");
-    Console.WriteLine($"Embeddings skipped (already existed): {skippedEmbeddingCount}");
+    Console.WriteLine($"Embeddings skipped already existed: {skippedEmbeddingCount}");
 }
 
 // 3. Display loaded articles
