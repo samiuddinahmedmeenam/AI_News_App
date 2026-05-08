@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "News_App", "News_App\News_A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "News_App.Api", "News_App.Api\News_App.Api.csproj", "{FB679BFD-BCAF-419D-ACEB-D052EB4D3A6A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "News_App.Core", "News_App.Core\News_App.Core.csproj", "{F1019018-CF69-469B-A021-4607518B9C27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{FB679BFD-BCAF-419D-ACEB-D052EB4D3A6A}.Release|x64.Build.0 = Release|Any CPU
 		{FB679BFD-BCAF-419D-ACEB-D052EB4D3A6A}.Release|x86.ActiveCfg = Release|Any CPU
 		{FB679BFD-BCAF-419D-ACEB-D052EB4D3A6A}.Release|x86.Build.0 = Release|Any CPU
+		{F1019018-CF69-469B-A021-4607518B9C27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1019018-CF69-469B-A021-4607518B9C27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1019018-CF69-469B-A021-4607518B9C27}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F1019018-CF69-469B-A021-4607518B9C27}.Debug|x64.Build.0 = Debug|Any CPU
+		{F1019018-CF69-469B-A021-4607518B9C27}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F1019018-CF69-469B-A021-4607518B9C27}.Debug|x86.Build.0 = Debug|Any CPU
+		{F1019018-CF69-469B-A021-4607518B9C27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1019018-CF69-469B-A021-4607518B9C27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1019018-CF69-469B-A021-4607518B9C27}.Release|x64.ActiveCfg = Release|Any CPU
+		{F1019018-CF69-469B-A021-4607518B9C27}.Release|x64.Build.0 = Release|Any CPU
+		{F1019018-CF69-469B-A021-4607518B9C27}.Release|x86.ActiveCfg = Release|Any CPU
+		{F1019018-CF69-469B-A021-4607518B9C27}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
