@@ -132,6 +132,54 @@ h1 {
   font-size: 14px;
 }
 
+.article-detail {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.back-button {
+  width: 42px;
+  height: 42px;
+  margin: 0 0 18px;
+  border: 1px solid #334155;
+  border-radius: 999px;
+  background: #020617;
+  color: #38bdf8;
+  font-size: 24px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-button:hover {
+  background: #0f172a;
+  border-color: #38bdf8;
+}
+
+.detail-meta {
+  display: flex;
+  justify-content: space-between;
+  color: #38bdf8;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.article-detail h2 {
+  margin: 0 0 18px;
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.detail-description {
+  color: #cbd5e1;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
 .helper-text {
   color: #94a3b8;
 }

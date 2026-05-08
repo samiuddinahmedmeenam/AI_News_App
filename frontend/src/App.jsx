@@ -40,19 +40,25 @@ function App() {
   },
 ];
 
+  const [selectedArticle, setSelectedArticle] = useState(null);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  
 
   function handleAsk() {
-    if (question.trim() === "") {
-      setAnswer("Please enter a question first.");
-      return;
-    }
-
-    setAnswer(
-      `Fake RAG answer for now: You asked "${question}". Later this will come from the C# backend.`
-    );
+  if (question.trim() === "") {
+    setAnswer("Please enter a question first.");
+    return;
   }
+
+  const selectedText = selectedArticle
+    ? ` while viewing "${selectedArticle.title}"`
+    : "";
+
+  setAnswer(
+    `Fake RAG answer for now: You asked "${question}"${selectedText}. Later this will come from the C# backend.`
+  );
+}
 
   return (
     <div className="app">
@@ -66,23 +72,51 @@ function App() {
 
       <main className="layout">
         <section className="card news-panel">
-          <div className="section-header">
-            <h2>Latest News</h2>
-              <span>{mockArticles.length} articles</span>
-          </div>
+          {selectedArticle ? (
+            <div className="article-detail">
+              <button
+                className="back-button"
+                onClick={() => setSelectedArticle(null)}
+              >
+                ←
+              </button>
 
-  <div className="news-list scrollable-news">
-            {mockArticles.map((article) => (
-              <article className="news-card" key={article.id}>
-                <div className="news-meta">
-                  <span>#{article.id}</span>
-                  <span>{article.source}</span>
-                </div>
-                <h3>{article.title}</h3>
-                <p>{article.description}</p>
-              </article>
-            ))}
-          </div>
+              <div className="detail-meta">
+                <span>#{selectedArticle.id}</span>
+                <span>{selectedArticle.source}</span>
+              </div>
+
+              <h2>{selectedArticle.title}</h2>
+
+              <p className="detail-description">
+                {selectedArticle.description}
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="section-header">
+                <h2>Latest News</h2>
+                <span>{mockArticles.length} articles</span>
+              </div>
+
+              <div className="news-list scrollable-news">
+                {mockArticles.map((article) => (
+                  <article
+                    className="news-card"
+                    key={article.id}
+                    onClick={() => setSelectedArticle(article)}
+                  >
+                    <div className="news-meta">
+                      <span>#{article.id}</span>
+                      <span>{article.source}</span>
+                    </div>
+                    <h3>{article.title}</h3>
+                    <p>{article.description}</p>
+                  </article>
+                ))}
+              </div>
+            </>
+          )}
         </section>
 
         <section className="card">
