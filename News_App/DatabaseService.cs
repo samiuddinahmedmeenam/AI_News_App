@@ -341,7 +341,6 @@ namespace News_App
             return embeddings;
         }
 
-        
 
     }
 }
