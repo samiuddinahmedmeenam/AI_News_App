@@ -180,6 +180,47 @@ h1 {
   line-height: 1.7;
 }
 
+.evidence-section {
+  margin-top: 20px;
+}
+
+.evidence-section h3 {
+  color: #38bdf8;
+  margin-bottom: 12px;
+}
+
+.evidence-list {
+  display: grid;
+  gap: 12px;
+}
+
+.evidence-card {
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.evidence-card p {
+  margin-bottom: 0;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.evidence-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #94a3b8;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.evidence-meta span:first-child {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
 .helper-text {
   color: #94a3b8;
 }

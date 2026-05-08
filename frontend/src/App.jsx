@@ -41,6 +41,7 @@ function App() {
 ];
 
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [evidence, setEvidence] = useState([]);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   
@@ -48,16 +49,34 @@ function App() {
   function handleAsk() {
   if (question.trim() === "") {
     setAnswer("Please enter a question first.");
+    setEvidence([]);
     return;
   }
 
-  const selectedText = selectedArticle
-    ? ` while viewing "${selectedArticle.title}"`
-    : "";
-
   setAnswer(
-    `Fake RAG answer for now: You asked "${question}"${selectedText}. Later this will come from the C# backend.`
+    `Fake RAG answer for now: Based on the retrieved news, your question "${question}" would be answered here by the C# backend.`
   );
+
+  setEvidence([
+    {
+      id: 1,
+      source: "Entertainment Daily",
+      score: 0.87,
+      text: "Netflix is adding several movies and TV shows in May, including new documentaries and original series.",
+    },
+    {
+      id: 2,
+      source: "Tech World",
+      score: 0.74,
+      text: "Major technology companies are releasing new AI tools for search, productivity, and customer support.",
+    },
+    {
+      id: 3,
+      source: "City News",
+      score: 0.61,
+      text: "Officials announced plans to improve public transportation routes and reduce traffic congestion.",
+    },
+  ]);
 }
 
   return (
@@ -137,6 +156,24 @@ function App() {
             <div className="answer-box">
               <h3>RAG Answer</h3>
               <p>{answer}</p>
+            </div>
+          )}
+
+          {evidence.length > 0 && (
+            <div className="evidence-section">
+              <h3>Retrieved Evidence</h3>
+
+              <div className="evidence-list">
+                {evidence.map((item) => (
+                  <div className="evidence-card" key={item.id}>
+                    <div className="evidence-meta">
+                      <span>{item.source}</span>
+                      <span>Score: {item.score}</span>
+                    </div>
+                    <p>{item.text}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </section>
