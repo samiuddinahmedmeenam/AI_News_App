@@ -3,28 +3,42 @@ import "./App.css";
 
 function App() {
   const mockArticles = [
-    {
-      id: 1,
-      title: "Netflix announces new May releases",
-      source: "Entertainment Daily",
-      description:
-        "Netflix is adding several movies and TV shows in May, including new documentaries and original series.",
-    },
-    {
-      id: 2,
-      title: "Tech companies expand AI tools",
-      source: "Tech World",
-      description:
-        "Major technology companies are releasing new AI tools for search, productivity, and customer support.",
-    },
-    {
-      id: 3,
-      title: "Local officials discuss transportation updates",
-      source: "City News",
-      description:
-        "Officials announced plans to improve public transportation routes and reduce traffic congestion.",
-    },
-  ];
+  {
+    id: 1,
+    title: "Netflix announces new May releases",
+    source: "Entertainment Daily",
+    description:
+      "Netflix is adding several movies and TV shows in May, including new documentaries and original series.",
+  },
+  {
+    id: 2,
+    title: "Tech companies expand AI tools",
+    source: "Tech World",
+    description:
+      "Major technology companies are releasing new AI tools for search, productivity, and customer support.",
+  },
+  {
+    id: 3,
+    title: "Local officials discuss transportation updates",
+    source: "City News",
+    description:
+      "Officials announced plans to improve public transportation routes and reduce traffic congestion.",
+  },
+  {
+    id: 4,
+    title: "Global markets react to new economic data",
+    source: "Finance Brief",
+    description:
+      "Investors are watching inflation, interest rates, and employment numbers as markets respond to fresh data.",
+  },
+  {
+    id: 5,
+    title: "New cybersecurity warning issued for users",
+    source: "Security Watch",
+    description:
+      "Experts are warning users to update their devices and avoid suspicious links after a rise in phishing attacks.",
+  },
+];
 
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -51,10 +65,13 @@ function App() {
       </header>
 
       <main className="layout">
-        <section className="card">
-          <h2>Latest News</h2>
+        <section className="card news-panel">
+          <div className="section-header">
+            <h2>Latest News</h2>
+              <span>{mockArticles.length} articles</span>
+          </div>
 
-          <div className="news-list">
+  <div className="news-list scrollable-news">
             {mockArticles.map((article) => (
               <article className="news-card" key={article.id}>
                 <div className="news-meta">
