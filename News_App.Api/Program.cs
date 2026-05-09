@@ -1,3 +1,5 @@
+using News_App;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -38,6 +40,34 @@ app.MapGet("/weatherforecast", () =>
 app.MapGet("/api/test", () =>
 {
     return Results.Ok(new { message = "API is working" });
+});
+
+app.MapGet("/api/news", () =>
+{
+    DatabaseService.InitializeDatabase();
+
+    string dbPath = Path.GetFullPath("news.db");
+    Console.WriteLine($"API DB Path: {dbPath}");
+
+    if (!DatabaseService.HasArticles())
+    {
+        return Results.Ok(new
+        {
+            message = "No articles found in the database.",
+            databasePath = dbPath,
+            articles = new List<Article>()
+        });
+    }
+
+    List<Article> articles = DatabaseService.GetAllArticles();
+
+    return Results.Ok(new
+    {
+        message = "Articles loaded successfully.",
+        databasePath = dbPath,
+        count = articles.Count,
+        articles = articles
+    });
 });
 
 app.Run();

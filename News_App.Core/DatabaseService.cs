@@ -11,7 +11,7 @@ namespace News_App
 {
     public class DatabaseService
     {
-        private const string connectionString = "Data Source = news.db";
+        private const string connectionString = @"Data Source=C:\Users\samiu\source\repos\News_App\news.db";
 
         public static void InitializeDatabase()
         {
