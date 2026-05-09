@@ -1,49 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const mockArticles = [
-  {
-    id: 1,
-    title: "Netflix announces new May releases",
-    source: "Entertainment Daily",
-    description:
-      "Netflix is adding several movies and TV shows in May, including new documentaries and original series.",
-  },
-  {
-    id: 2,
-    title: "Tech companies expand AI tools",
-    source: "Tech World",
-    description:
-      "Major technology companies are releasing new AI tools for search, productivity, and customer support.",
-  },
-  {
-    id: 3,
-    title: "Local officials discuss transportation updates",
-    source: "City News",
-    description:
-      "Officials announced plans to improve public transportation routes and reduce traffic congestion.",
-  },
-  {
-    id: 4,
-    title: "Global markets react to new economic data",
-    source: "Finance Brief",
-    description:
-      "Investors are watching inflation, interest rates, and employment numbers as markets respond to fresh data.",
-  },
-  {
-    id: 5,
-    title: "New cybersecurity warning issued for users",
-    source: "Security Watch",
-    description:
-      "Experts are warning users to update their devices and avoid suspicious links after a rise in phishing attacks.",
-  },
-];
 
+  const [articles, setArticles] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
-  const [evidence, setEvidence] = useState([]);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [evidence, setEvidence] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+  async function loadArticles() {
+    try {
+      const response = await fetch("http://localhost:5190/api/news");
+
+      if (!response.ok) {
+        throw new Error("Failed to load articles.");
+      }
+
+      const data = await response.json();
+
+      setArticles(data.articles || []);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  loadArticles();
+}, []);
+
+  
+
+  
   
 
   function handleAsk() {
@@ -91,7 +83,11 @@ function App() {
 
       <main className="layout">
         <section className="card news-panel">
-          {selectedArticle ? (
+          {loading ? (
+            <p className="helper-text">Loading articles...</p>
+          ) : error ? (
+            <p className="helper-text">Error: {error}</p>
+          ) : selectedArticle ? (
             <div className="article-detail">
               <button
                 className="back-button"
@@ -101,36 +97,47 @@ function App() {
               </button>
 
               <div className="detail-meta">
-                <span>#{selectedArticle.id}</span>
-                <span>{selectedArticle.source}</span>
+                <span>{selectedArticle.category || "News"}</span>
+                <span>{selectedArticle.sourceName || "Unknown Source"}</span>
               </div>
 
               <h2>{selectedArticle.title}</h2>
 
               <p className="detail-description">
-                {selectedArticle.description}
+                {selectedArticle.description || "No description available."}
               </p>
+
+              {selectedArticle.url && (
+                <a
+                  href={selectedArticle.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="article-link"
+                >
+                  Open original article
+                </a>
+              )}
             </div>
           ) : (
             <>
               <div className="section-header">
                 <h2>Latest News</h2>
-                <span>{mockArticles.length} articles</span>
+                <span>{articles.length} articles</span>
               </div>
 
               <div className="news-list scrollable-news">
-                {mockArticles.map((article) => (
+                {articles.map((article, index) => (
                   <article
                     className="news-card"
-                    key={article.id}
+                    key={article.url || index}
                     onClick={() => setSelectedArticle(article)}
                   >
                     <div className="news-meta">
-                      <span>#{article.id}</span>
-                      <span>{article.source}</span>
+                      <span>#{index + 1}</span>
+                      <span>{article.sourceName || "Unknown Source"}</span>
                     </div>
-                    <h3>{article.title}</h3>
-                    <p>{article.description}</p>
+                    <h3>{article.title || "No title available"}</h3>
+                    <p>{article.description || "No description available."}</p>
                   </article>
                 ))}
               </div>
