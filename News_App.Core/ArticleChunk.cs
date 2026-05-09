@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace News_App
 {
-    internal class ArticleChunk
+    public class ArticleChunk
     {
         public int Id {  get; set; }
         public string ArticleUrl { get; set; } = "";

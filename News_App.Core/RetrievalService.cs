@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace News_App
 {
-    internal class RetrievalService
+    public class RetrievalService
     {
         public static List<ArticleChunk> RetrieveRelevantChunks(string question, List<ArticleChunk> chunks, int topK = 3)
         {

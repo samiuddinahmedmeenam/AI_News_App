@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace News_App
 {
-    internal class EmbeddingService
+    public class EmbeddingService
     {
         public static async Task<List<float>> GetEmbedding(string text)
         {

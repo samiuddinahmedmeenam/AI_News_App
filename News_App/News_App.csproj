@@ -11,4 +11,8 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\News_App.Core\News_App.Core.csproj" />
+  </ItemGroup>
+
 </Project>

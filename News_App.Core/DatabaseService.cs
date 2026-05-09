@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace News_App
 {
-    internal class DatabaseService
+    public class DatabaseService
     {
         private const string connectionString = "Data Source = news.db";
 

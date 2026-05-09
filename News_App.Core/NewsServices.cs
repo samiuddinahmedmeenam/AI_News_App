@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace News_App
 {
-    internal class NewsServices
+    public class NewsServices
     {
         public static async Task<List<Article>> GetTopNews()
         {

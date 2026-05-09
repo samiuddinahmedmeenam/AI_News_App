@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace News_App
 {
-    internal class AiSummaryServices
+    public class AiSummaryServices
     {
         public static async Task<string> GetSummary(Article selectedArticle)
         {
