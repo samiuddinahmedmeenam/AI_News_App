@@ -33,6 +33,8 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
+
+
 app.MapGet("/weatherforecast", () =>
 {
     var forecast =  Enumerable.Range(1, 5).Select(index =>
@@ -46,6 +48,8 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast");
+
+
 
 
 
@@ -82,7 +86,76 @@ app.MapGet("/api/news", () =>
     });
 });
 
+app.MapPost("/api/ask", async (AskRequest request) =>
+{
+    DatabaseService.InitializeDatabase();
+
+    if (string.IsNullOrWhiteSpace(request.Question))
+    {
+        return Results.BadRequest(new
+        {
+            message = "Question cannot be empty."
+        });
+    }
+
+    // 1. Create embedding for user's question
+    List<float> questionEmbedding = await EmbeddingService.GetEmbedding(request.Question);
+
+    // 2. Load chunks and saved chunk embeddings
+    List<ArticleChunk> allChunks = DatabaseService.GetAllChunks();
+    Dictionary<int, List<float>> chunkEmbeddings = DatabaseService.GetAllChunkEmbeddings();
+
+    if (allChunks.Count == 0 || chunkEmbeddings.Count == 0)
+    {
+        return Results.Ok(new AskResponse(
+            "No chunks or embeddings were found in the database.",
+            new List<EvidenceDto>()
+        ));
+    }
+
+    // 3. Semantic retrieval
+    List<ArticleChunk> relevantChunks =
+        RetrievalService.RetrieveRelevantChunksSemantic(
+            questionEmbedding,
+            allChunks,
+            chunkEmbeddings,
+            topK: 5
+        );
+
+    // 4. Build context
+    string context = RetrievalService.BuildContextFromChunks(relevantChunks);
+
+    // 5. Ask AI using retrieved context
+    string answer = await AiSummaryServices.AnswerWithContext(request.Question, context);
+
+    // 6. Return answer + evidence
+    List<EvidenceDto> evidence = relevantChunks.Select(chunk =>
+        new EvidenceDto(
+            chunk.ChunkText,
+            chunk.ArticleUrl,
+            chunk.ChunkIndex
+        )
+    ).ToList();
+
+    return Results.Ok(new AskResponse(answer, evidence));
+});
+
 app.Run();
+
+
+record AskRequest(string Question);
+
+record EvidenceDto(
+    string ChunkText,
+    string ArticleUrl,
+    int ChunkIndex
+);
+
+record AskResponse(
+    string Answer,
+    List<EvidenceDto> Evidence
+);
+
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {

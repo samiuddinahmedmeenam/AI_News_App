@@ -50,37 +50,39 @@ function App() {
   
   
 
-  function handleAsk() {
+  async function handleAsk() {
   if (question.trim() === "") {
     setAnswer("Please enter a question first.");
     setEvidence([]);
     return;
   }
 
-  setAnswer(
-    `Fake RAG answer for now: Based on the retrieved news, your question "${question}" would be answered here by the C# backend.`
-  );
+  try {
+    setAnswer("Thinking...");
+    setEvidence([]);
 
-  setEvidence([
-    {
-      id: 1,
-      source: "Entertainment Daily",
-      score: 0.87,
-      text: "Netflix is adding several movies and TV shows in May, including new documentaries and original series.",
-    },
-    {
-      id: 2,
-      source: "Tech World",
-      score: 0.74,
-      text: "Major technology companies are releasing new AI tools for search, productivity, and customer support.",
-    },
-    {
-      id: 3,
-      source: "City News",
-      score: 0.61,
-      text: "Officials announced plans to improve public transportation routes and reduce traffic congestion.",
-    },
-  ]);
+    const response = await fetch("http://localhost:5190/api/ask", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        question: question,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to get RAG answer.");
+    }
+
+    const data = await response.json();
+
+    setAnswer(data.answer || "No answer returned.");
+    setEvidence(data.evidence || []);
+  } catch (err) {
+    setAnswer(`Error: ${err.message}`);
+    setEvidence([]);
+  }
 }
 
   return (
@@ -188,8 +190,20 @@ function App() {
                 {evidence.map((item) => (
                   <div className="evidence-card" key={item.id}>
                     <div className="evidence-meta">
-                      <span>{item.source}</span>
-                      <span>Score: {item.score}</span>
+                      <span>Chunk {item.chunkIndex}</span>
+                        <span>Evidence</span>
+                        <p>{item.chunkText}</p>
+
+                        {item.articleUrl && (
+                          <a
+                            href={item.articleUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="evidence-link"
+                          >
+                            Open source
+                          </a>
+                        )}
                     </div>
                     <p>{item.text}</p>
                   </div>
