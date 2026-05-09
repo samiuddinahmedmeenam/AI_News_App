@@ -11,6 +11,18 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  function shortenText(text, maxLength = 160) {
+  if (!text) {
+    return "No description available.";
+  }
+
+  if (text.length <= maxLength) {
+    return text;
+  }
+
+  return text.substring(0, maxLength) + "...";
+  }
+
   useEffect(() => {
   async function loadArticles() {
     try {
@@ -117,6 +129,8 @@ function App() {
                   Open original article
                 </a>
               )}
+
+          
             </div>
           ) : (
             <>
@@ -137,7 +151,7 @@ function App() {
                       <span>{article.sourceName || "Unknown Source"}</span>
                     </div>
                     <h3>{article.title || "No title available"}</h3>
-                    <p>{article.description || "No description available."}</p>
+                    <p>{shortenText(article.description, 160)}</p>
                   </article>
                 ))}
               </div>

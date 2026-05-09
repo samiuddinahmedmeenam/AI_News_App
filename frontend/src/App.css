@@ -134,19 +134,28 @@ h1 {
 
 .article-detail {
   height: 100%;
+  overflow-y: auto;
+  padding-right: 8px;
   display: flex;
   flex-direction: column;
 }
 
 .article-link {
   margin-top: 20px;
-  color: #38bdf8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #38bdf8;
+  color: #020617;
   font-weight: 700;
   text-decoration: none;
+  border-radius: 12px;
+  padding: 12px 16px;
 }
 
 .article-link:hover {
-  text-decoration: underline;
+  background: #7dd3fc;
+  text-decoration: none;
 }
 
 .back-button {
@@ -179,16 +188,30 @@ h1 {
   margin-bottom: 16px;
 }
 
-.article-detail h2 {
-  margin: 0 0 18px;
-  font-size: 30px;
-  line-height: 1.2;
-}
+
 
 .detail-description {
   color: #cbd5e1;
   font-size: 18px;
   line-height: 1.7;
+}
+
+.article-detail::-webkit-scrollbar {
+  width: 8px;
+}
+
+.article-detail::-webkit-scrollbar-track {
+  background: #020617;
+  border-radius: 999px;
+}
+
+.article-detail::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 999px;
+}
+
+.article-detail::-webkit-scrollbar-thumb:hover {
+  background: #38bdf8;
 }
 
 .evidence-section {
