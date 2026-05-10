@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 function App() {
 
   const [articles, setArticles] = useState([]);
@@ -18,7 +20,7 @@ function App() {
     setRefreshing(true);
     setError("");
 
-    const response = await fetch("http://localhost:5190/api/refresh-news", {
+    const response = await fetch(`${API_BASE_URL}/api/refresh-news`, {
       method: "POST",
     });
 
@@ -29,7 +31,7 @@ function App() {
     const result = await response.json();
     console.log("Refresh result:", result);
 
-    const newsResponse = await fetch("http://localhost:5190/api/news");
+    const newsResponse = await fetch(`${API_BASE_URL}/api/news`);
 
     if (!newsResponse.ok) {
       throw new Error("Failed to reload articles.");
@@ -61,7 +63,7 @@ function App() {
   useEffect(() => {
   async function loadArticles() {
     try {
-      const response = await fetch("http://localhost:5190/api/news");
+      const response = await fetch(`${API_BASE_URL}/api/news`);
 
       if (!response.ok) {
         throw new Error("Failed to load articles.");
@@ -96,7 +98,7 @@ function App() {
     setAnswer("Thinking...");
     setEvidence([]);
 
-    const response = await fetch("http://localhost:5190/api/ask", {
+    const response = await fetch(`${API_BASE_URL}/api/ask`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
