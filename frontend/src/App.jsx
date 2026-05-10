@@ -9,11 +9,13 @@ function App() {
   const [answer, setAnswer] = useState("");
   const [evidence, setEvidence] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
+  
 
-  async function handleRefreshNews() {
+ async function handleRefreshNews() {
   try {
-    setLoading(true);
+    setRefreshing(true);
     setError("");
 
     const response = await fetch("http://localhost:5190/api/refresh-news", {
@@ -27,7 +29,6 @@ function App() {
     const result = await response.json();
     console.log("Refresh result:", result);
 
-    // Reload articles after refresh
     const newsResponse = await fetch("http://localhost:5190/api/news");
 
     if (!newsResponse.ok) {
@@ -35,12 +36,13 @@ function App() {
     }
 
     const newsData = await newsResponse.json();
+
     setArticles(newsData.articles || []);
     setSelectedArticle(null);
   } catch (err) {
     setError(err.message);
   } finally {
-    setLoading(false);
+    setRefreshing(false);
   }
 }
 
@@ -175,8 +177,12 @@ function App() {
                   <span>{articles.length} articles</span>
                 </div>
 
-                <button className="refresh-button" onClick={handleRefreshNews}>
-                  Refresh News
+                <button
+                  className="refresh-button"
+                  onClick={handleRefreshNews}
+                  disabled={refreshing}
+                >
+                  {refreshing ? "Loading..." : "Refresh News"}
                 </button>
               </div>
 
