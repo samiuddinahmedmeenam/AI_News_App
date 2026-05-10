@@ -41,12 +41,24 @@ namespace News_App
 
         public static async Task<string> CallAPI()
         {
+            string? apiKey = Environment.GetEnvironmentVariable("NEWSDATA_API_KEY");
+
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                throw new Exception("NewsData API key not found. Set NEWSDATA_API_KEY first.");
+            }
+
             using HttpClient client = new HttpClient();
-            string url = "https://newsdata.io/api/1/latest?apikey=pub_cbfa2a0ee9a44571a357aad0783424ad&language=en";
+
+            string url = $"https://newsdata.io/api/1/latest?apikey={apiKey}&language=en";
+
             string response = await client.GetStringAsync(url);
+
             return response;
         }
     }
+
+    //"https://newsdata.io/api/1/latest?apikey=pub_cbfa2a0ee9a44571a357aad0783424ad&language=en";
 
     public class NewsApiResponse
     {
