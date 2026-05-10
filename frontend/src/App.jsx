@@ -11,6 +11,39 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  async function handleRefreshNews() {
+  try {
+    setLoading(true);
+    setError("");
+
+    const response = await fetch("http://localhost:5190/api/refresh-news", {
+      method: "POST",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to refresh news.");
+    }
+
+    const result = await response.json();
+    console.log("Refresh result:", result);
+
+    // Reload articles after refresh
+    const newsResponse = await fetch("http://localhost:5190/api/news");
+
+    if (!newsResponse.ok) {
+      throw new Error("Failed to reload articles.");
+    }
+
+    const newsData = await newsResponse.json();
+    setArticles(newsData.articles || []);
+    setSelectedArticle(null);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+}
+
   function shortenText(text, maxLength = 160) {
   if (!text) {
     return "No description available.";
@@ -137,8 +170,14 @@ function App() {
           ) : (
             <>
               <div className="section-header">
-                <h2>Latest News</h2>
-                <span>{articles.length} articles</span>
+                <div>
+                  <h2>Latest News</h2>
+                  <span>{articles.length} articles</span>
+                </div>
+
+                <button className="refresh-button" onClick={handleRefreshNews}>
+                  Refresh News
+                </button>
               </div>
 
               <div className="news-list scrollable-news">

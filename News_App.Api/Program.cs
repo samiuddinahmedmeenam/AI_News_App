@@ -140,6 +140,12 @@ app.MapPost("/api/ask", async (AskRequest request) =>
     return Results.Ok(new AskResponse(answer, evidence));
 });
 
+app.MapPost("/api/refresh-news", async () =>
+{
+    NewsIngestionResult result = await NewsIngestionService.RefreshNews();
+    return Results.Ok(result);
+});
+
 app.Run();
 
 

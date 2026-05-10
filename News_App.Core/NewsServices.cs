@@ -16,7 +16,7 @@ namespace News_App
 
             if (apiResponse?.results != null)
             {
-                for (int i = 0; i < apiResponse.results.Count && i < 5; i++)
+                for (int i = 0; i < apiResponse.results.Count && i < 10; i++)
                 {
                     NewsDataArticle item = apiResponse.results[i];
 
