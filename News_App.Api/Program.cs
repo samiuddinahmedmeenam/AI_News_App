@@ -2,11 +2,15 @@ using News_App;
 
 var builder = WebApplication.CreateBuilder(args);
 
+string frontendOrigin =
+    Environment.GetEnvironmentVariable("FRONTEND_ORIGIN")
+    ?? "http://localhost:5173";
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins(frontendOrigin)
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
