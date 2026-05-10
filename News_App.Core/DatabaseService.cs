@@ -11,11 +11,21 @@ namespace News_App
 {
     public class DatabaseService
     {
-        private const string connectionString = @"Data Source=C:\Users\samiu\source\repos\News_App\news.db";
+        private static string GetConnectionString()
+        {
+            string? dbPath = Environment.GetEnvironmentVariable("NEWS_DB_PATH");
+
+            if (string.IsNullOrWhiteSpace(dbPath))
+            {
+                dbPath = Path.Combine(AppContext.BaseDirectory, "news.db");
+            }
+
+            return $"Data Source={dbPath}";
+        }
 
         public static void InitializeDatabase()
         {
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(GetConnectionString());
             connection.Open();
 
             var command = connection.CreateCommand();
@@ -68,7 +78,7 @@ namespace News_App
 
         public static void SaveArticle(Article article)
         {
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(GetConnectionString());
             connection.Open();
 
             var command = connection.CreateCommand();
@@ -123,7 +133,7 @@ namespace News_App
         {
             List<Article> articles = new List<Article>();
 
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(GetConnectionString());
             connection.Open();
 
             var command = connection.CreateCommand();
@@ -159,7 +169,7 @@ namespace News_App
 
         public static bool HasArticles()
         {
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(GetConnectionString());
             connection.Open();
 
             var command = connection.CreateCommand();
@@ -173,7 +183,7 @@ namespace News_App
 
         public static bool ChunkEmbeddingExists(int chunkId)
         {
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(GetConnectionString());
             connection.Open();
 
             var command = connection.CreateCommand();
@@ -223,7 +233,7 @@ namespace News_App
             string sourceText = BuildChunkSourceText(article);
             List<string> chunks = ChunkText(sourceText);
 
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(GetConnectionString());
             connection.Open();
 
             for(int i = 0; i<chunks.Count; i++)
@@ -259,7 +269,7 @@ namespace News_App
         {
             List<ArticleChunk> chunks = new List<ArticleChunk>();
 
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(GetConnectionString());
             connection.Open();
 
             var command = connection.CreateCommand();
@@ -290,7 +300,7 @@ namespace News_App
 
         public static void SaveChunkEmbedding(int chunkId, List<float> embedding, string model = "text-embedding-3-small")
         {
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(GetConnectionString());
             connection.Open();
 
             var command = connection.CreateCommand();
@@ -314,7 +324,7 @@ namespace News_App
         {
             Dictionary<int, List<float>> embeddings = new Dictionary<int, List<float>>();
 
-            using var connection = new SqliteConnection(connectionString);
+            using var connection = new SqliteConnection(GetConnectionString());
             connection.Open();
 
             var command = connection.CreateCommand();
