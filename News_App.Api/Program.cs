@@ -150,6 +150,23 @@ app.MapPost("/api/refresh-news", async () =>
     return Results.Ok(result);
 });
 
+app.MapGet("/api/health", () =>
+{
+    string? newsDbPath = Environment.GetEnvironmentVariable("NEWS_DB_PATH");
+    string? newsDataKey = Environment.GetEnvironmentVariable("NEWSDATA_API_KEY");
+    string? openAiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+    string? frontendOrigin = Environment.GetEnvironmentVariable("FRONTEND_ORIGIN");
+
+    return Results.Ok(new
+    {
+        status = "OK",
+        databaseConfigured = !string.IsNullOrWhiteSpace(newsDbPath),
+        newsDataKeyConfigured = !string.IsNullOrWhiteSpace(newsDataKey),
+        openAiKeyConfigured = !string.IsNullOrWhiteSpace(openAiKey),
+        frontendOrigin = frontendOrigin ?? "http://localhost:5173"
+    });
+});
+
 app.Run();
 
 
