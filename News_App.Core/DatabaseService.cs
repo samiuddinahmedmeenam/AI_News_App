@@ -175,7 +175,9 @@ namespace News_App
             var command = connection.CreateCommand();
             command.CommandText = "SELECT COUNT(*) FROM NewsArticles;";
 
-            long count = (long)command.ExecuteScalar();
+            object? result = command.ExecuteScalar();
+
+            long count = result == null ? 0 : Convert.ToInt64(result);
 
             Console.WriteLine($"Total articles in database: {count}");
             return count > 0;
@@ -195,7 +197,9 @@ namespace News_App
 
             command.Parameters.AddWithValue("$ChunkId", chunkId);
 
-            long count = (long)command.ExecuteScalar();
+            object? result = command.ExecuteScalar();
+
+            long count = result == null ? 0 : Convert.ToInt64(result);
 
             return count > 0;
         }
