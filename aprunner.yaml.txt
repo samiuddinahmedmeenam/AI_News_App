@@ -1,0 +1,12 @@
+version: 1.0
+runtime: dotnet8
+build:
+  commands:
+    build:
+      - dotnet restore News_App.sln
+      - dotnet publish News_App.Api/News_App.Api.csproj -c Release -o ./publish
+run:
+  command: dotnet ./publish/News_App.Api.dll
+  network:
+    port: 8080
+    env: PORT
