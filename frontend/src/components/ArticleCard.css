@@ -1,0 +1,28 @@
+.news-card {
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 14px;
+  padding: 18px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.news-card:hover {
+  border-color: #38bdf8;
+}
+
+.news-card h3 {
+  margin: 10px 0;
+}
+
+.news-card p {
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.news-meta {
+  display: flex;
+  justify-content: space-between;
+  color: #38bdf8;
+  font-size: 14px;
+}
