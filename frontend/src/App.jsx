@@ -7,7 +7,9 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function App() {
   const [articles, setArticles] = useState([]);
+  const [allArticles, setAllArticles] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [evidence, setEvidence] = useState([]);
@@ -39,8 +41,11 @@ function App() {
 
       const newsData = await newsResponse.json();
 
-      setArticles(newsData.articles || []);
+      const allArticlesData = newsData.articles || [];
+      setArticles(allArticlesData);
+      setAllArticles(allArticlesData);
       setSelectedArticle(null);
+      setSelectedDate(null);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -59,7 +64,9 @@ function App() {
 
         const data = await response.json();
 
-        setArticles(data.articles || []);
+      const allArticlesData = data.articles || [];
+      setArticles(allArticlesData);
+      setAllArticles(allArticlesData);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -69,6 +76,18 @@ function App() {
 
     loadArticles();
   }, []);
+
+  const handleDateSelect = (dateKey, filteredArticles) => {
+    setSelectedDate(dateKey);
+    setArticles(filteredArticles);
+    setSelectedArticle(null);
+  };
+
+  const handleClearDate = () => {
+    setSelectedDate(null);
+    setArticles(allArticles);
+    setSelectedArticle(null);
+  };
 
   async function handleAsk() {
     if (question.trim() === "") {
@@ -119,9 +138,13 @@ function App() {
         <section className="card news-panel">
           <ArticleList
             articles={articles}
+            allArticles={allArticles}
             selectedArticle={selectedArticle}
+            selectedDate={selectedDate}
             onSelectArticle={setSelectedArticle}
             onRefresh={handleRefreshNews}
+            onDateSelect={handleDateSelect}
+            onClearDate={handleClearDate}
             refreshing={refreshing}
             loading={loading}
             error={error}
