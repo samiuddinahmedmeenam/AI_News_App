@@ -11,6 +11,8 @@ function App() {
   const [allArticles, setAllArticles] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedProvider, setSelectedProvider] = useState(null);
+  const [selectedGenre, setSelectedGenre] = useState(null);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [evidence, setEvidence] = useState([]);
@@ -47,6 +49,8 @@ function App() {
       setAllArticles(allArticlesData);
       setSelectedArticle(null);
       setSelectedDate(null);
+      setSelectedProvider(null);
+      setSelectedGenre(null);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -65,9 +69,9 @@ function App() {
 
         const data = await response.json();
 
-      const allArticlesData = data.articles || [];
-      setArticles(allArticlesData);
-      setAllArticles(allArticlesData);
+        const allArticlesData = data.articles || [];
+        setArticles(allArticlesData);
+        setAllArticles(allArticlesData);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -80,6 +84,8 @@ function App() {
 
   const handleDateSelect = (dateKey, filteredArticles) => {
     setSelectedDate(dateKey);
+    setSelectedProvider(null);
+    setSelectedGenre(null);
     setArticles(filteredArticles);
     setSelectedArticle(null);
   };
@@ -87,6 +93,22 @@ function App() {
   const handleClearDate = () => {
     setSelectedDate(null);
     setArticles(allArticles);
+    setSelectedArticle(null);
+  };
+
+  const handleProviderSelect = (provider, filteredArticles) => {
+    setSelectedProvider(provider);
+    setSelectedDate(null);
+    setSelectedGenre(null);
+    setArticles(filteredArticles);
+    setSelectedArticle(null);
+  };
+
+  const handleGenreSelect = (genre, filteredArticles) => {
+    setSelectedGenre(genre);
+    setSelectedDate(null);
+    setSelectedProvider(null);
+    setArticles(filteredArticles);
     setSelectedArticle(null);
   };
 
@@ -141,8 +163,12 @@ function App() {
             <CalendarFilter
               articles={allArticles}
               selectedDate={selectedDate}
+              selectedProvider={selectedProvider}
+              selectedGenre={selectedGenre}
               onDateSelect={handleDateSelect}
               onClearDate={handleClearDate}
+              onProviderSelect={handleProviderSelect}
+              onGenreSelect={handleGenreSelect}
             />
           </section>
 

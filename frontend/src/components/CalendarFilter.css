@@ -6,6 +6,161 @@
   border-radius: 14px;
 }
 
+.calendar-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.calendar-toggle-btn {
+  background: none;
+  border: 1px solid #334155;
+  color: #38bdf8;
+  font-size: 12px;
+  width: 44px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.calendar-toggle-btn:hover {
+  background: #1f2937;
+  border-color: #38bdf8;
+  transform: scale(1.05);
+}
+
+.calendar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.calendar-action-btn {
+  background: none;
+  border: 1px solid #334155;
+  color: #38bdf8;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.calendar-action-btn:hover {
+  background: #1f2937;
+  border-color: #38bdf8;
+}
+
+.calendar-action-btn.active {
+  background: #38bdf8;
+  border-color: #38bdf8;
+  color: #020617;
+}
+
+.calendar-action-btn.active:hover {
+  background: #7dd3fc;
+}
+
+.filter-dropdown {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 10px;
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+}
+
+.filter-option-btn {
+  width: 100%;
+  margin-top: 0;
+  padding: 9px 10px;
+  background: #111827;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-option-btn:hover {
+  background: #1f2937;
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+.provider-dropdown {
+  display: grid;
+  gap: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 8px;
+  background: #0a0e27;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+}
+
+.provider-option-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  margin-top: 0;
+  padding: 8px 9px;
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 7px;
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.provider-option-btn:hover,
+.provider-option-btn.selected {
+  background: #1f2937;
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+.provider-option-btn span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.provider-option-btn span:last-child {
+  flex-shrink: 0;
+  color: #94a3b8;
+}
+
+.provider-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.provider-dropdown::-webkit-scrollbar-track {
+  background: #020617;
+  border-radius: 999px;
+}
+
+.provider-dropdown::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 999px;
+}
+
 .calendar-header {
   display: flex;
   justify-content: space-between;
