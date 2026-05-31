@@ -1,8 +1,15 @@
+.article-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
+  flex-shrink: 0;
 }
 
 .section-header h2 {
@@ -16,6 +23,8 @@
 }
 
 .scrollable-news {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding-right: 8px;
   display: grid;

@@ -1,17 +1,12 @@
 import "./ArticleList.css";
 import { ArticleCard } from "./ArticleCard";
 import { ArticleDetail } from "./ArticleDetail";
-import { CalendarFilter } from "./CalendarFilter";
 
 export function ArticleList({
   articles,
-  allArticles,
   selectedArticle,
-  selectedDate,
   onSelectArticle,
   onRefresh,
-  onDateSelect,
-  onClearDate,
   refreshing,
   loading,
   error,
@@ -34,14 +29,7 @@ export function ArticleList({
   }
 
   return (
-    <>
-      <CalendarFilter
-        articles={allArticles}
-        selectedDate={selectedDate}
-        onDateSelect={onDateSelect}
-        onClearDate={onClearDate}
-      />
-
+    <div className="article-list-wrapper">
       <div className="section-header">
         <div>
           <h2>Latest News</h2>
@@ -67,6 +55,6 @@ export function ArticleList({
           />
         ))}
       </div>
-    </>
+    </div>
   );
 }

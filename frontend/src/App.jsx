@@ -2,6 +2,7 @@
 import "./App.css";
 import { ArticleList } from "./components/ArticleList";
 import { AskPanel } from "./components/AskPanel";
+import { CalendarFilter } from "./components/CalendarFilter";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -135,23 +136,30 @@ function App() {
       </header>
 
       <main className="layout">
-        <section className="card news-panel">
-          <ArticleList
-            articles={articles}
-            allArticles={allArticles}
-            selectedArticle={selectedArticle}
-            selectedDate={selectedDate}
-            onSelectArticle={setSelectedArticle}
-            onRefresh={handleRefreshNews}
-            onDateSelect={handleDateSelect}
-            onClearDate={handleClearDate}
-            refreshing={refreshing}
-            loading={loading}
-            error={error}
-          />
-        </section>
+        <aside className="left-column">
+          <section className="card calendar-card">
+            <CalendarFilter
+              articles={allArticles}
+              selectedDate={selectedDate}
+              onDateSelect={handleDateSelect}
+              onClearDate={handleClearDate}
+            />
+          </section>
 
-        <section className="card">
+          <section className="card articles-card">
+            <ArticleList
+              articles={articles}
+              selectedArticle={selectedArticle}
+              onSelectArticle={setSelectedArticle}
+              onRefresh={handleRefreshNews}
+              refreshing={refreshing}
+              loading={loading}
+              error={error}
+            />
+          </section>
+        </aside>
+
+        <section className="card ask-card">
           <AskPanel
             question={question}
             setQuestion={setQuestion}
