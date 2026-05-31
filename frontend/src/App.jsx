@@ -5,6 +5,21 @@ import { AskPanel } from "./components/AskPanel";
 import { CalendarFilter } from "./components/CalendarFilter";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const REFRESH_STEP_DELAY_MS = 450;
+const REFRESH_STEPS = [
+  "Calling provider",
+  "Fetching news",
+  "Parsing JSON",
+  "Storing to database",
+  "Loading news",
+  "Thumbs up",
+];
+
+function waitForRefreshStep() {
+  return new Promise((resolve) => {
+    setTimeout(resolve, REFRESH_STEP_DELAY_MS);
+  });
+}
 
 function App() {
   const [articles, setArticles] = useState([]);
@@ -18,12 +33,24 @@ function App() {
   const [evidence, setEvidence] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [refreshStatus, setRefreshStatus] = useState("");
+  const [refreshProgress, setRefreshProgress] = useState(0);
   const [error, setError] = useState("");
 
   async function handleRefreshNews() {
+    const showRefreshStep = async (status) => {
+      const stepIndex = REFRESH_STEPS.indexOf(status);
+
+      setRefreshStatus(status);
+      setRefreshProgress(((stepIndex + 1) / REFRESH_STEPS.length) * 100);
+      await waitForRefreshStep();
+    };
+
     try {
       setRefreshing(true);
       setError("");
+
+      await showRefreshStep("Calling provider");
 
       const response = await fetch(`${API_BASE_URL}/api/refresh-news`, {
         method: "POST",
@@ -33,8 +60,14 @@ function App() {
         throw new Error("Failed to refresh news.");
       }
 
+      await showRefreshStep("Fetching news");
+
       const result = await response.json();
       console.log("Refresh result:", result);
+
+      await showRefreshStep("Parsing JSON");
+      await showRefreshStep("Storing to database");
+      await showRefreshStep("Loading news");
 
       const newsResponse = await fetch(`${API_BASE_URL}/api/news`);
 
@@ -51,10 +84,13 @@ function App() {
       setSelectedDate(null);
       setSelectedProvider(null);
       setSelectedGenre(null);
+      await showRefreshStep("Thumbs up");
     } catch (err) {
       setError(err.message);
     } finally {
       setRefreshing(false);
+      setRefreshStatus("");
+      setRefreshProgress(0);
     }
   }
 
@@ -179,6 +215,8 @@ function App() {
               onSelectArticle={setSelectedArticle}
               onRefresh={handleRefreshNews}
               refreshing={refreshing}
+              refreshStatus={refreshStatus}
+              refreshProgress={refreshProgress}
               loading={loading}
               error={error}
             />

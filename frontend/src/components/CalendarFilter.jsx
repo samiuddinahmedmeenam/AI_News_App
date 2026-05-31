@@ -127,7 +127,6 @@ export function CalendarFilter({
 
     if (articlesByDate[dateStr]) {
       onDateSelect(dateStr, articlesByDate[dateStr]);
-      setIsOpen(false);
     }
   };
 

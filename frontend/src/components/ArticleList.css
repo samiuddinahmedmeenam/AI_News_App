@@ -50,7 +50,10 @@
 }
 
 .refresh-button {
+  position: relative;
+  overflow: hidden;
   width: auto;
+  min-width: 132px;
   padding: 10px 14px;
   border-radius: 10px;
   font-size: 14px;
@@ -63,11 +66,84 @@
   transition: background 0.2s;
 }
 
+.refresh-button.is-refreshing {
+  background: #7dd3fc;
+  color: #020617;
+  box-shadow: 0 0 0 1px rgba(125, 211, 252, 0.25), 0 0 18px rgba(14, 165, 233, 0.25);
+}
+
+.refresh-button.is-refreshing::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: var(--refresh-progress);
+  height: 3px;
+  background: #e0f2fe;
+  transition: width 0.35s ease;
+}
+
 .refresh-button:hover:not(:disabled) {
   background: #7dd3fc;
 }
 
 .refresh-button:disabled {
-  opacity: 0.65;
   cursor: not-allowed;
+}
+
+.refresh-status {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #020617;
+  font-weight: 800;
+  animation: refresh-status-in 0.2s ease;
+}
+
+.refresh-spinner {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(2, 6, 23, 0.3);
+  border-top-color: #020617;
+  border-radius: 50%;
+  animation: refresh-spin 0.75s linear infinite;
+}
+
+.refresh-complete {
+  font-size: 15px;
+  line-height: 1;
+  animation: refresh-success-pop 0.42s cubic-bezier(0.2, 1.4, 0.35, 1);
+}
+
+@keyframes refresh-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes refresh-status-in {
+  from {
+    transform: translateY(3px);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes refresh-success-pop {
+  0% {
+    transform: scale(0.7);
+  }
+
+  65% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }

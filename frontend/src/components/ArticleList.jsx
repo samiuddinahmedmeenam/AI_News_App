@@ -8,6 +8,8 @@ export function ArticleList({
   onSelectArticle,
   onRefresh,
   refreshing,
+  refreshStatus,
+  refreshProgress,
   loading,
   error,
 }) {
@@ -37,11 +39,25 @@ export function ArticleList({
         </div>
 
         <button
-          className="refresh-button"
+          className={`refresh-button ${refreshing ? "is-refreshing" : ""}`}
           onClick={onRefresh}
           disabled={refreshing}
+          style={{ "--refresh-progress": `${refreshProgress || 0}%` }}
         >
-          {refreshing ? "Loading..." : "Refresh News"}
+          {refreshing ? (
+            <span className="refresh-status">
+              {refreshStatus === "Thumbs up" ? (
+                <span className="refresh-complete" aria-hidden="true">
+                  &#128077;
+                </span>
+              ) : (
+                <span className="refresh-spinner" aria-hidden="true"></span>
+              )}
+              <span>{refreshStatus || "Refreshing"}</span>
+            </span>
+          ) : (
+            "Refresh News"
+          )}
         </button>
       </div>
 
