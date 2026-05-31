@@ -76,7 +76,7 @@ namespace News_App
             chunkCommand.ExecuteNonQuery();
         }
 
-        public static void SaveArticle(Article article)
+        public static bool SaveArticle(Article article)
         {
             using var connection = new SqliteConnection(GetConnectionString());
             connection.Open();
@@ -100,16 +100,47 @@ namespace News_App
             command.Parameters.AddWithValue("$FetchedAt", DateTime.UtcNow.ToString("O"));
             command.Parameters.AddWithValue("$Content", article.Content);
 
-            command.ExecuteNonQuery();
+            int rowsAffected = command.ExecuteNonQuery();
+
+            return rowsAffected > 0;
         }
 
-        public static void SaveArticles(List<Article> articles)
+        public static SaveArticlesResult SaveArticles(List<Article> articles)
         {
-            foreach (var article in articles)
+            SaveArticlesResult result = new SaveArticlesResult();
+
+            foreach (Article article in articles)
             {
-                SaveArticle(article);
+                bool wasSaved = SaveArticle(article);
+
+                if (wasSaved)
+                {
+                    result.SavedArticles++;
+                }
+                else
+                {
+                    result.SkippedArticles++;
+                }
             }
-            Console.WriteLine($"Saved {articles.Count} articles to the database.");
+
+            Console.WriteLine($"Saved new articles: {result.SavedArticles}");
+            Console.WriteLine($"Skipped duplicate articles: {result.SkippedArticles}");
+
+            return result;
+        }
+
+        public static int GetTotalArticleCount()
+        {
+            using var connection = new SqliteConnection(GetConnectionString());
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT COUNT(*) FROM NewsArticles;";
+
+            object? result = command.ExecuteScalar();
+
+
+            return result == null ? 0 : Convert.ToInt32(result);
         }
 
         public static void SaveSelectedArticle(List<Article> articles)
@@ -219,6 +250,41 @@ namespace News_App
                 int length = Math.Min(chunkSize, text.Length - i);
                 chunks.Add(text.Substring(i, length));
             }
+            return chunks;
+        }
+
+        public static List<ArticleChunk> GetChunksWithoutEmbeddings()
+        {
+            List<ArticleChunk> chunks = new List<ArticleChunk>();
+
+            using var connection = new SqliteConnection(GetConnectionString());
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+                SELECT c.Id, c.ArticleUrl, c.ProviderArticleId, c.ChunkIndex, c.ChunkText, c.CreatedAt
+                FROM ArticleChunks c
+                LEFT JOIN ChunkEmbeddings e ON c.Id = e.ChunkId
+                WHERE e.ChunkId IS NULL;
+            ";
+
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                ArticleChunk chunk = new ArticleChunk
+                {
+                    Id = reader.GetInt32(0),
+                    ArticleUrl = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                    ProviderArticleId = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    ChunkIndex = reader.GetInt32(3),
+                    ChunkText = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                    CreatedAt = reader.IsDBNull(5) ? "" : reader.GetString(5)
+                };
+
+                chunks.Add(chunk);
+            }
+
             return chunks;
         }
 

@@ -4,45 +4,56 @@
     {
         public static async Task<NewsIngestionResult> RefreshNews()
         {
+            DateTime startedAt = DateTime.UtcNow;
+
             DatabaseService.InitializeDatabase();
 
             // 1. Fetch latest articles
             List<Article> articles = await NewsServices.GetTopNews();
 
             // 2. Save articles
-            DatabaseService.SaveArticles(articles);
+            SaveArticlesResult saveResult = DatabaseService.SaveArticles(articles);
 
             // 3. Save chunks
             DatabaseService.SaveArticleChunks(articles);
 
-            // 4. Load all chunks from database
+
+            // 4. Get total article count after save
+            int totalArticles = DatabaseService.GetTotalArticleCount();
+            Console.WriteLine($"TOTAL ARTICLES AFTER SAVE: {totalArticles}");
+
+            // 5. Load chunk counts
             List<ArticleChunk> allChunks = DatabaseService.GetAllChunks();
+            List<ArticleChunk> chunksWithoutEmbeddings = DatabaseService.GetChunksWithoutEmbeddings();
 
             int newEmbeddingCount = 0;
-            int skippedEmbeddingCount = 0;
+            int skippedEmbeddingCount = allChunks.Count - chunksWithoutEmbeddings.Count;
 
-            // 5. Create embeddings only for chunks that do not already have embeddings
-            foreach (ArticleChunk chunk in allChunks)
+            // 6. Create embeddings only for chunks that do not already have embeddings
+            foreach (ArticleChunk chunk in chunksWithoutEmbeddings)
             {
-                if (DatabaseService.ChunkEmbeddingExists(chunk.Id))
-                {
-                    skippedEmbeddingCount++;
-                    continue;
-                }
-
                 List<float> embedding = await EmbeddingService.GetEmbedding(chunk.ChunkText);
                 DatabaseService.SaveChunkEmbedding(chunk.Id, embedding);
+
                 newEmbeddingCount++;
             }
 
-            // 6. Return result summary
+            DateTime finishedAt = DateTime.UtcNow;
+
+            // 7. Return result summary
             return new NewsIngestionResult
             {
                 Message = "News refresh complete.",
                 FetchedArticles = articles.Count,
+                SavedArticles = saveResult.SavedArticles,
+                SkippedArticles = saveResult.SkippedArticles,
+                TotalArticles = totalArticles,
                 TotalChunks = allChunks.Count,
                 NewEmbeddings = newEmbeddingCount,
-                SkippedEmbeddings = skippedEmbeddingCount
+                SkippedEmbeddings = skippedEmbeddingCount,
+                StartedAt = startedAt,
+                FinishedAt = finishedAt,
+                DurationSeconds = (finishedAt - startedAt).TotalSeconds,
             };
         }
     }

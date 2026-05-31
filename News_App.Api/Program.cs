@@ -153,8 +153,19 @@ app.MapPost("/api/ask", async (AskRequest request) =>
 
 app.MapPost("/api/refresh-news", async () =>
 {
-    NewsIngestionResult result = await NewsIngestionService.RefreshNews();
-    return Results.Ok(result);
+    try
+    {
+        NewsIngestionResult result = await NewsIngestionService.RefreshNews();
+        return Results.Ok(result);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(
+            title: "News refresh failed.",
+            detail: ex.Message,
+            statusCode: 500
+        );
+    }
 });
 
 app.MapGet("/api/health", () =>
