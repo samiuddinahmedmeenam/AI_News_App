@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { ArticleList } from "./components/ArticleList";
 import { AskPanel } from "./components/AskPanel";
@@ -6,6 +6,7 @@ import { CalendarFilter } from "./components/CalendarFilter";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const REFRESH_STEP_DELAY_MS = 450;
+const REFRESH_SUMMARY_DURATION_MS = 10000;
 const REFRESH_STEPS = [
   "Calling provider",
   "Fetching news",
@@ -35,7 +36,9 @@ function App() {
   const [refreshing, setRefreshing] = useState(false);
   const [refreshStatus, setRefreshStatus] = useState("");
   const [refreshProgress, setRefreshProgress] = useState(0);
+  const [refreshResult, setRefreshResult] = useState(null);
   const [error, setError] = useState("");
+  const refreshSummaryTimerRef = useRef(null);
 
   async function handleRefreshNews() {
     const showRefreshStep = async (status) => {
@@ -49,21 +52,26 @@ function App() {
     try {
       setRefreshing(true);
       setError("");
+      setRefreshResult(null);
+
+      if (refreshSummaryTimerRef.current) {
+        clearTimeout(refreshSummaryTimerRef.current);
+      }
 
       await showRefreshStep("Calling provider");
 
-      const response = await fetch(`${API_BASE_URL}/api/refresh-news`, {
+      const refreshResponse = await fetch(`${API_BASE_URL}/api/refresh-news`, {
         method: "POST",
       });
 
-      if (!response.ok) {
+      if (!refreshResponse.ok) {
         throw new Error("Failed to refresh news.");
       }
 
       await showRefreshStep("Fetching news");
 
-      const result = await response.json();
-      console.log("Refresh result:", result);
+      const ingestionResult = await refreshResponse.json();
+      console.log("Ingestion result:", ingestionResult);
 
       await showRefreshStep("Parsing JSON");
       await showRefreshStep("Storing to database");
@@ -76,15 +84,21 @@ function App() {
       }
 
       const newsData = await newsResponse.json();
-
       const allArticlesData = newsData.articles || [];
-      setArticles(allArticlesData);
+
       setAllArticles(allArticlesData);
+      setArticles(allArticlesData);
       setSelectedArticle(null);
       setSelectedDate(null);
       setSelectedProvider(null);
       setSelectedGenre(null);
+
       await showRefreshStep("Thumbs up");
+
+      setRefreshResult(ingestionResult);
+      refreshSummaryTimerRef.current = setTimeout(() => {
+        setRefreshResult(null);
+      }, REFRESH_SUMMARY_DURATION_MS);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -93,6 +107,14 @@ function App() {
       setRefreshProgress(0);
     }
   }
+
+  useEffect(() => {
+    return () => {
+      if (refreshSummaryTimerRef.current) {
+        clearTimeout(refreshSummaryTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     async function loadArticles() {
@@ -217,6 +239,7 @@ function App() {
               refreshing={refreshing}
               refreshStatus={refreshStatus}
               refreshProgress={refreshProgress}
+              refreshResult={refreshResult}
               loading={loading}
               error={error}
             />

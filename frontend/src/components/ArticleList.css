@@ -118,6 +118,34 @@
   animation: refresh-success-pop 0.42s cubic-bezier(0.2, 1.4, 0.35, 1);
 }
 
+.refresh-summary {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 4px 10px;
+  max-width: 280px;
+  padding: 10px 12px;
+  background: #020617;
+  border: 1px solid #38bdf8;
+  border-radius: 12px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
+  animation: refresh-summary-in 0.22s ease;
+}
+
+.refresh-summary p {
+  grid-column: 1 / -1;
+  margin: 0 0 2px;
+  color: #7dd3fc;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.refresh-summary span {
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 @keyframes refresh-spin {
   to {
     transform: rotate(360deg);
@@ -145,5 +173,17 @@
 
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes refresh-summary-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
