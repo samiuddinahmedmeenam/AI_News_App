@@ -69,32 +69,31 @@ app.MapGet("/api/test", () =>
     return Results.Ok(new { message = "API is working" });
 });
 
-app.MapGet("/api/news", () =>
+app.MapGet("/api/news", async () =>
 {
-    DatabaseService.InitializeDatabase();
-
-    string dbPath = Path.GetFullPath("news.db");
-    Console.WriteLine($"API DB Path: {dbPath}");
-
-    if (!DatabaseService.HasArticles())
+    try
     {
+        await PostgresDatabaseService.InitializeDatabase();
+
+        List<Article> articles = await PostgresDatabaseService.GetAllArticles();
+
         return Results.Ok(new
         {
-            message = "No articles found in the database.",
-            databasePath = dbPath,
-            articles = new List<Article>()
+            message = articles.Count == 0
+                ? "No articles found in the PostgreSQL database."
+                : "Articles loaded successfully from PostgreSQL.",
+            count = articles.Count,
+            articles = articles
         });
     }
-
-    List<Article> articles = DatabaseService.GetAllArticles();
-
-    return Results.Ok(new
+    catch (Exception ex)
     {
-        message = "Articles loaded successfully.",
-        databasePath = dbPath,
-        count = articles.Count,
-        articles = articles
-    });
+        return Results.Problem(
+            title: "Failed to load articles from PostgreSQL.",
+            detail: ex.Message,
+            statusCode: 500
+        );
+    }
 });
 
 app.MapPost("/api/ask", async (AskRequest request) =>
