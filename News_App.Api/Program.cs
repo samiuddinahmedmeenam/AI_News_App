@@ -168,6 +168,8 @@ app.MapPost("/api/refresh-news", async () =>
     }
 });
 
+
+
 app.MapGet("/api/health", () =>
 {
     string? newsDbPath = Environment.GetEnvironmentVariable("NEWS_DB_PATH");
@@ -183,6 +185,30 @@ app.MapGet("/api/health", () =>
         openAiKeyConfigured = !string.IsNullOrWhiteSpace(openAiKey),
         frontendOrigin = frontendOrigin ?? "http://localhost:5173"
     });
+});
+
+// aws testing endpoint - not used by frontend
+
+app.MapGet("/api/postgres-test", async () =>
+{
+    try
+    {
+        await PostgresDatabaseService.TestConnection();
+        await PostgresDatabaseService.InitializeDatabase();
+
+        return Results.Ok(new
+        {
+            message = "PostgreSQL connection and table initialization successful."
+        });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(
+            title: "PostgreSQL test failed.",
+            detail: ex.Message,
+            statusCode: 500
+        );
+    }
 });
 
 app.Run();

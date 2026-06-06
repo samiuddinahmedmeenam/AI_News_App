@@ -6,25 +6,23 @@
         {
             DateTime startedAt = DateTime.UtcNow;
 
-            DatabaseService.InitializeDatabase();
+            await PostgresDatabaseService.InitializeDatabase();
 
             // 1. Fetch latest articles
             List<Article> articles = await NewsServices.GetTopNews();
 
             // 2. Save articles
-            SaveArticlesResult saveResult = DatabaseService.SaveArticles(articles);
+            SaveArticlesResult saveResult = await PostgresDatabaseService.SaveArticles(articles);
 
             // 3. Save chunks
-            DatabaseService.SaveArticleChunks(articles);
-
+            await PostgresDatabaseService.SaveArticleChunks(articles);
 
             // 4. Get total article count after save
-            int totalArticles = DatabaseService.GetTotalArticleCount();
-            Console.WriteLine($"TOTAL ARTICLES AFTER SAVE: {totalArticles}");
+            int totalArticles = await PostgresDatabaseService.GetTotalArticleCount();
 
-            // 5. Load chunk counts
-            List<ArticleChunk> allChunks = DatabaseService.GetAllChunks();
-            List<ArticleChunk> chunksWithoutEmbeddings = DatabaseService.GetChunksWithoutEmbeddings();
+            // 5. Load chunks from database
+            List<ArticleChunk> allChunks = await PostgresDatabaseService.GetAllChunks();
+            List<ArticleChunk> chunksWithoutEmbeddings = await PostgresDatabaseService.GetChunksWithoutEmbeddings();
 
             int newEmbeddingCount = 0;
             int skippedEmbeddingCount = allChunks.Count - chunksWithoutEmbeddings.Count;
@@ -33,7 +31,7 @@
             foreach (ArticleChunk chunk in chunksWithoutEmbeddings)
             {
                 List<float> embedding = await EmbeddingService.GetEmbedding(chunk.ChunkText);
-                DatabaseService.SaveChunkEmbedding(chunk.Id, embedding);
+                await PostgresDatabaseService.SaveChunkEmbedding(chunk.Id, embedding);
 
                 newEmbeddingCount++;
             }
